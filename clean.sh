@@ -1,13 +1,13 @@
 #!/bin/bash
 
 echo "=========================================="
-echo "  Limpieza Completa de Docker"
+echo "  Limpieza Completa de Docker - Latido Andino"
 echo "=========================================="
 echo ""
 echo "⚠️  ADVERTENCIA: Esta operación eliminará:"
 echo "   - Todos los contenedores detenidos"
 echo "   - Todas las redes no utilizadas"
-echo "   - Todos los volúmenes no utilizados"
+echo "   - Todos los volúmenes no utilizados (incluyendo latido_data)"
 echo "   - Todas las imágenes no utilizadas"
 echo "   - Todo el caché de compilación"
 echo ""

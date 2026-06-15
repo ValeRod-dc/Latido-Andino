@@ -1,10 +1,9 @@
-
 services:
   web:
     build: .
-    container_name: coffee_shop_web
+    container_name: latido_andino_web
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
       - ./src:/var/www/html
     depends_on:
@@ -12,23 +11,23 @@ services:
     environment:
       - MONGO_HOST=mongodb
       - MONGO_PORT=27017
-      - MONGO_DB=coffee_shop
+      - MONGO_DB=latido_andino
     networks:
-      - coffee_network
+      - latido_network
 
   mongodb:
     image: mongo:7.0
-    container_name: coffee_shop_db
+    container_name: latido_andino_db
     ports:
       - "27017:27017"
     volumes:
-      - mongodb_data:/data/db
+      - latido_data:/data/db
     networks:
-      - coffee_network
+      - latido_network
 
 volumes:
-  mongodb_data:
+  latido_data:
 
 networks:
-  coffee_network:
+  latido_network:
     driver: bridge

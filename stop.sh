@@ -1,11 +1,10 @@
 #!/bin/bash
 
 echo "======================================"
-echo "  Deteniendo Coffee Shop Application"
+echo "  Deteniendo Latido Andino"
 echo "======================================"
 echo ""
 
-# Detener los contenedores sin eliminar volúmenes ni imágenes
 echo "🛑 Deteniendo contenedores..."
 docker-compose down
 

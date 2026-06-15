@@ -1,132 +1,136 @@
-// Script para inicializar la base de datos con datos de ejemplo
-// Este script se ejecutará automáticamente al iniciar MongoDB
+// Base de datos: latido_andino
+db = db.getSiblingDB('latido_andino');
 
-db = db.getSiblingDB('coffee_shop');
+// Limpiar colecciones
+db.usuarios.drop();
+db.tramites.drop();
+db.vehiculos.drop();
+db.declaraciones_sag.drop();
+db.pasos_fronterizos.drop();
+db.integraciones.drop();
 
-// Limpiar colecciones existentes
-db.users.drop();
-db.products.drop();
+// ============================================
+// USUARIOS con roles específicos
+// ============================================
+// Hash para "123456" (bcrypt)
+const hash = "$2y$10$k3mAM9vNjsDIKdLq3SYIgeKi3B5fw15Lpx4uBnxrftZ3PexqFL.8K";
 
-// Crear usuarios de ejemplo
-// Password hash para "123456": $2y$10$k3mAM9vNjsDIKdLq3SYIgeKi3B5fw15Lpx4uBnxrftZ3PexqFL.8K
-db.users.insertMany([
+db.usuarios.insertMany([
     {
-        name: "Cliente Demo",
-        email: "cliente@coffee.com",
-        password: "$2y$10$k3mAM9vNjsDIKdLq3SYIgeKi3B5fw15Lpx4uBnxrftZ3PexqFL.8K", // 123456
-        role: "cliente",
+        name: "Viajero Demo",
+        email: "viajero@example.com",
+        password: hash,
+        role: "viajero",
+        rut: "12345678-9",
+        nacionalidad: "Chilena",
         created_at: new Date()
     },
     {
-        name: "Trabajador Demo",
-        email: "trabajador@coffee.com",
-        password: "$2y$10$k3mAM9vNjsDIKdLq3SYIgeKi3B5fw15Lpx4uBnxrftZ3PexqFL.8K", // 123456
-        role: "trabajador",
+        name: "Funcionario Aduana",
+        email: "aduanas@aduana.cl",
+        password: hash,
+        role: "aduanas",
+        cargo: "Fiscalizador",
         created_at: new Date()
     },
     {
-        name: "Administrador Demo",
-        email: "admin@coffee.com",
-        password: "$2y$10$k3mAM9vNjsDIKdLq3SYIgeKi3B5fw15Lpx4uBnxrftZ3PexqFL.8K", // 123456
-        role: "administrador",
+        name: "Funcionario SAG",
+        email: "sag@sag.cl",
+        password: hash,
+        role: "sag",
+        cargo: "Inspector",
+        created_at: new Date()
+    },
+    {
+        name: "Funcionario PDI",
+        email: "pdi@pdi.cl",
+        password: hash,
+        role: "pdi",
+        cargo: "Policía Internacional",
+        created_at: new Date()
+    },
+    {
+        name: "Administrador Sistema",
+        email: "admin@latidoandino.cl",
+        password: hash,
+        role: "admin",
         created_at: new Date()
     }
 ]);
 
-// Crear productos de café
-db.products.insertMany([
+// ============================================
+// PASOS FRONTERIZOS
+// ============================================
+db.pasos_fronterizos.insertMany([
     {
-        name: "Espresso",
-        description: "Café espresso italiano intenso y aromático, preparado con granos seleccionados",
-        price: 3.50,
-        size: "Regular",
-        icon: "bi bi-cup-hot-fill",
-        active: true,
-        is_new: false,
-        created_at: new Date()
+        nombre: "Los Libertadores",
+        region: "Valparaíso",
+        pais_conexion: "Argentina",
+        provincia: "Mendoza",
+        activo: true
     },
     {
-        name: "Cappuccino",
-        description: "Espresso con leche vaporizada y espuma cremosa, perfecto para cualquier momento",
-        price: 4.50,
-        size: "Grande",
-        icon: "bi bi-cup-straw",
-        active: true,
-        is_new: false,
-        created_at: new Date()
+        nombre: "Paso Cardenal Samoré",
+        region: "Los Lagos",
+        pais_conexion: "Argentina",
+        provincia: "Neuquén",
+        activo: true
     },
     {
-        name: "Latte",
-        description: "Café latte suave con leche cremosa y un toque de vainilla",
-        price: 4.75,
-        size: "Grande",
-        icon: "bi bi-cup-hot",
-        active: true,
-        is_new: true,
-        created_at: new Date()
-    },
+        nombre: "Paso Chungará",
+        region: "Arica y Parinacota",
+        pais_conexion: "Bolivia",
+        provincia: "La Paz",
+        activo: true
+    }
+]);
+
+// ============================================
+// TRÁMITES DE EJEMPLO
+// ============================================
+db.tramites.insertMany([
     {
-        name: "Americano",
-        description: "Espresso doble con agua caliente, ideal para los amantes del café fuerte",
-        price: 3.75,
-        size: "Regular",
-        icon: "bi bi-cup",
-        active: true,
-        is_new: false,
-        created_at: new Date()
-    },
-    {
-        name: "Mocha",
-        description: "Deliciosa combinación de espresso, chocolate y leche vaporizada",
-        price: 5.25,
-        size: "Grande",
-        icon: "bi bi-cup-hot-fill",
-        active: true,
-        is_new: true,
-        created_at: new Date()
-    },
-    {
-        name: "Caramel Macchiato",
-        description: "Espresso con leche, vainilla y caramelo, coronado con espuma",
-        price: 5.50,
-        size: "Grande",
-        icon: "bi bi-cup-straw",
-        active: true,
-        is_new: true,
-        created_at: new Date()
-    },
-    {
-        name: "Flat White",
-        description: "Espresso doble con microespuma de leche, cremoso y suave",
-        price: 4.25,
-        size: "Regular",
-        icon: "bi bi-cup-hot",
-        active: true,
-        is_new: false,
-        created_at: new Date()
-    },
-    {
-        name: "Cold Brew",
-        description: "Café preparado en frío durante 12 horas, servido con hielo",
-        price: 4.50,
-        size: "Grande",
-        icon: "bi bi-cup-straw",
-        active: true,
-        is_new: false,
-        created_at: new Date()
-    },
-    {
-        name: "Affogato",
-        description: "Espresso caliente servido sobre helado de vainilla artesanal",
-        price: 5.75,
-        size: "Regular",
-        icon: "bi bi-cup-hot-fill",
-        active: true,
-        is_new: true,
+        tipo: "ingreso",
+        viajero_rut: "12345678-9",
+        viajero_nombre: "Viajero Demo",
+        paso_fronterizo: "Los Libertadores",
+        fecha_tramite: new Date(),
+        estado: "aprobado",
+        documentos: {
+            identidad: "verificado",
+            declaracion_sag: "pendiente"
+        },
+        pase_agil_qr: "MOCK_QR_001",
+        validacion_cruzada: {
+            pdi: "aprobado",
+            sag: "aprobado",
+            interpol: "sin_alertas"
+        },
         created_at: new Date()
     }
 ]);
 
-print("✅ Base de datos inicializada correctamente");
-print("📊 Usuarios creados: " + db.users.count());
-print("☕ Productos creados: " + db.products.count());
+// ============================================
+// VEHÍCULOS DE EJEMPLO
+// ============================================
+db.vehiculos.insertMany([
+    {
+        patente: "AB1234",
+        marca: "Toyota",
+        modelo: "Corolla",
+        año: 2020,
+        color: "Gris",
+        propietario_rut: "12345678-9",
+        acuerdo_chile_argentina: {
+            activo: true,
+            fecha_emision: new Date(),
+            fecha_vencimiento: new Date(Date.now() + 180*24*60*60*1000),
+            formulario_id: "F-001"
+        }
+    }
+]);
+
+print("Base de datos Latido Andino inicializada");
+print(`Usuarios: ${db.usuarios.countDocuments()}`);
+print(`Pasos fronterizos: ${db.pasos_fronterizos.countDocuments()}`);
+print(`Vehículos: ${db.vehiculos.countDocuments()}`);

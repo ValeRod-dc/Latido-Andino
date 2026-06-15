@@ -8,13 +8,11 @@ class AuthController {
     }
     
     public function login() {
-        // Si ya está logueado, redirigir a home
         if (isset($_SESSION['user_id'])) {
-            header('Location: /home');
+            $this->redirectByRole($_SESSION['user_role']);
             exit;
         }
-        
-        require_once __DIR__ . '/../views/login.php';
+        require_once __DIR__ . '/../views/auth/login.php';
     }
     
     public function processLogin() {
@@ -35,12 +33,7 @@ class AuthController {
         
         $user = $this->userModel->findByEmail($email);
         
-        if (!$user) {
-            echo json_encode(['success' => false, 'message' => 'Credenciales inválidas']);
-            return;
-        }
-        
-        if (!$this->userModel->verifyPassword($password, $user->password)) {
+        if (!$user || !$this->userModel->verifyPassword($password, $user->password)) {
             echo json_encode(['success' => false, 'message' => 'Credenciales inválidas']);
             return;
         }
@@ -51,115 +44,45 @@ class AuthController {
         $_SESSION['user_email'] = $user->email;
         $_SESSION['user_role'] = $user->role;
         
-        // Cookie para persistencia (7 días)
+        // Cookie persistente
         $cookie_value = base64_encode(json_encode([
             'user_id' => (string)$user->_id,
             'user_role' => $user->role
         ]));
+        setcookie('latido_session', $cookie_value, time() + (86400 * 7), '/');
         
-        setcookie('coffee_session', $cookie_value, time() + (86400 * 7), '/');
+        // Determinar redirección según rol
+        $redirect = $this->getRedirectByRole($user->role);
         
         echo json_encode([
             'success' => true,
             'message' => 'Login exitoso',
-            'redirect' => '/home'
+            'rol' => $user->role,
+            'redirect' => $redirect
         ]);
+    }
+    
+    private function getRedirectByRole($role) {
+        $redirects = [
+            'viajero' => '/viajero/dashboard',
+            'aduanas' => '/aduanas/dashboard',
+            'sag' => '/sag/dashboard',
+            'pdi' => '/pdi/dashboard',
+            'admin' => '/admin/dashboard'
+        ];
+        return $redirects[$role] ?? '/home';
+    }
+    
+    private function redirectByRole($role) {
+        $redirect = $this->getRedirectByRole($role);
+        header("Location: $redirect");
+        exit;
     }
     
     public function logout() {
         session_destroy();
-        setcookie('coffee_session', '', time() - 3600, '/');
-        header('Location: /home');
+        setcookie('latido_session', '', time() - 3600, '/');
+        header('Location: /login');
         exit;
-    }
-    
-    public function register() {
-        // Si ya está logueado, redirigir a home
-        if (isset($_SESSION['user_id'])) {
-            header('Location: /home');
-            exit;
-        }
-        
-        require_once __DIR__ . '/../views/register.php';
-    }
-    
-    public function processRegister() {
-        header('Content-Type: application/json');
-        
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
-            return;
-        }
-        
-        $name = trim($_POST['name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $password = $_POST['password'] ?? '';
-        $confirmPassword = $_POST['confirm_password'] ?? '';
-        
-        // Validaciones
-        if (empty($name) || empty($email) || empty($password)) {
-            echo json_encode(['success' => false, 'message' => 'Todos los campos son requeridos']);
-            return;
-        }
-        
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo json_encode(['success' => false, 'message' => 'Email inválido']);
-            return;
-        }
-        
-        if (strlen($password) < 6) {
-            echo json_encode(['success' => false, 'message' => 'La contraseña debe tener al menos 6 caracteres']);
-            return;
-        }
-        
-        if ($password !== $confirmPassword) {
-            echo json_encode(['success' => false, 'message' => 'Las contraseñas no coinciden']);
-            return;
-        }
-        
-        // Verificar si el email ya existe
-        $existingUser = $this->userModel->findByEmail($email);
-        if ($existingUser) {
-            echo json_encode(['success' => false, 'message' => 'Este email ya está registrado']);
-            return;
-        }
-        
-        // Crear usuario
-        try {
-            $userId = $this->userModel->create([
-                'name' => $name,
-                'email' => $email,
-                'password' => $password,
-                'role' => 'cliente' // Por defecto los nuevos usuarios son clientes
-            ]);
-            
-            if (!$userId) {
-                echo json_encode(['success' => false, 'message' => 'Error al crear el usuario']);
-                return;
-            }
-            
-            // Iniciar sesión automáticamente
-            $_SESSION['user_id'] = (string)$userId;
-            $_SESSION['user_name'] = $name;
-            $_SESSION['user_email'] = $email;
-            $_SESSION['user_role'] = 'cliente';
-            
-            // Cookie para persistencia (7 días)
-            $cookie_value = base64_encode(json_encode([
-                'user_id' => (string)$userId,
-                'user_role' => 'cliente'
-            ]));
-            
-            setcookie('coffee_session', $cookie_value, time() + (86400 * 7), '/');
-            
-            echo json_encode([
-                'success' => true,
-                'message' => '¡Registro exitoso! Bienvenido',
-                'redirect' => '/home'
-            ]);
-            
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'message' => 'Error al registrar usuario: ' . $e->getMessage()]);
-        }
     }
 }

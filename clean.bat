@@ -1,6 +1,6 @@
 @echo off
 echo ==========================================
-echo   Limpieza Completa de Docker
+echo   Limpieza Completa de Docker - Latido Andino
 echo ==========================================
 echo.
 echo ADVERTENCIA: Esta operacion eliminara:

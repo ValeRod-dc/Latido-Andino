@@ -1,139 +1,188 @@
-/* ☕ Coffee Shop - Estilos Globales */
-
 /* ============================================
-   Variables CSS - Paleta de Colores Cafetería
+   Latido Andino - Estilos Globales
+   Variables CSS - Paleta de Colores Institucional SNA
    ============================================ */
+
 :root {
-    --coffee-brown: #6F4E37;
-    --coffee-light: #A67B5B;
-    --coffee-cream: #ECE0D1;
-    --coffee-dark: #3E2723;
-    --coffee-accent: #D4A574;
+    /* Colores institucionales SNA */
+    --sna-blue: #002B5C;
+    --sna-red: #D92B2B;
+    --sna-white: #FFFFFF;
+    --sna-gray: #F5F5F5;
+    --sna-light-blue: #E8F0FE;
+    --sna-green: #28A745;
+    --sna-yellow: #FFC107;
+    --sna-dark: #1A1A1A;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 5px 15px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+    
+    /* Bordes */
+    --radius-sm: 8px;
+    --radius-md: 10px;
+    --radius-lg: 15px;
+    --radius-xl: 20px;
+    --radius-full: 50%;
+    
+    /* Transiciones */
+    --transition-fast: 0.2s;
+    --transition-normal: 0.3s;
+    --transition-slow: 0.5s;
 }
 
 /* ============================================
-   Estilos Base
+   Reset y Estilos Base
    ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background: linear-gradient(135deg, var(--coffee-cream) 0%, var(--coffee-accent) 100%);
-    min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--sna-gray);
+    color: var(--sna-dark);
+    line-height: 1.6;
 }
 
 /* ============================================
-   Página de Login
+   Tipografía
    ============================================ */
-.login-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-bottom: 1rem;
 }
 
-.login-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(62, 39, 35, 0.2);
-    overflow: hidden;
-    max-width: 450px;
-    width: 100%;
+.text-sna-blue { color: var(--sna-blue); }
+.text-sna-red { color: var(--sna-red); }
+.text-sna-green { color: var(--sna-green); }
+.text-sna-white { color: var(--sna-white); }
+
+/* ============================================
+   Botones
+   ============================================ */
+.btn-primary {
+    background: var(--sna-blue);
+    border-color: var(--sna-blue);
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
 }
 
-.login-header {
-    background: linear-gradient(135deg, var(--coffee-brown) 0%, var(--coffee-dark) 100%);
-    color: white;
-    padding: 40px 30px;
-    text-align: center;
+.btn-primary:hover {
+    background: #004080;
+    border-color: #004080;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-.login-header i {
-    font-size: 3rem;
-    margin-bottom: 15px;
+.btn-outline-primary {
+    border-color: var(--sna-blue);
+    color: var(--sna-blue);
 }
 
-.login-body {
-    padding: 40px 30px;
+.btn-outline-primary:hover {
+    background: var(--sna-blue);
+    border-color: var(--sna-blue);
+}
+
+.btn-danger {
+    background: var(--sna-red);
+    border-color: var(--sna-red);
+}
+
+.btn-success {
+    background: var(--sna-green);
+    border-color: var(--sna-green);
 }
 
 /* ============================================
    Formularios
    ============================================ */
-.form-control {
-    border: 2px solid var(--coffee-cream);
-    border-radius: 10px;
+.form-control, .form-select {
+    border: 2px solid #e0e0e0;
+    border-radius: var(--radius-md);
     padding: 12px 15px;
-    transition: all 0.3s;
+    transition: all var(--transition-fast);
 }
 
-.form-control:focus {
-    border-color: var(--coffee-brown);
-    box-shadow: 0 0 0 0.2rem rgba(111, 78, 55, 0.15);
+.form-control:focus, .form-select:focus {
+    border-color: var(--sna-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 43, 92, 0.15);
 }
 
 .form-label {
-    color: var(--coffee-dark);
     font-weight: 500;
+    color: var(--sna-blue);
     margin-bottom: 8px;
 }
 
+.form-check-input:checked {
+    background-color: var(--sna-blue);
+    border-color: var(--sna-blue);
+}
+
 /* ============================================
-   Botones
+   Alertas
    ============================================ */
-.btn-coffee {
-    background: linear-gradient(135deg, var(--coffee-brown) 0%, var(--coffee-light) 100%);
-    color: white;
+.alert {
     border: none;
-    padding: 12px;
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.3s;
+    border-radius: var(--radius-md);
+    padding: 15px 20px;
 }
 
-.btn-coffee:hover {
-    background: linear-gradient(135deg, var(--coffee-dark) 0%, var(--coffee-brown) 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(62, 39, 35, 0.3);
-    color: white;
+.alert-success {
+    background: #D4EDDA;
+    color: #155724;
 }
 
-.btn-logout {
-    background: transparent;
-    border: 2px solid white;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 20px;
-    transition: all 0.3s;
+.alert-danger {
+    background: #F8D7DA;
+    color: #721C24;
 }
 
-.btn-logout:hover {
+.alert-warning {
+    background: #FFF3CD;
+    color: #856404;
+}
+
+.alert-info {
+    background: var(--sna-light-blue);
+    color: var(--sna-blue);
+}
+
+/* ============================================
+   Tarjetas
+   ============================================ */
+.card {
+    border: none;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.card-header {
     background: white;
-    color: var(--coffee-dark);
+    border-bottom: 1px solid #eee;
+    padding: 20px 25px;
 }
 
-.btn-add-cart {
-    background: linear-gradient(135deg, var(--coffee-brown) 0%, var(--coffee-light) 100%);
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 10px;
-    width: 100%;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-.btn-add-cart:hover {
-    background: linear-gradient(135deg, var(--coffee-dark) 0%, var(--coffee-brown) 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(62, 39, 35, 0.3);
+.card-body {
+    padding: 25px;
 }
 
 /* ============================================
    Navbar
    ============================================ */
 .navbar {
-    background: linear-gradient(135deg, var(--coffee-brown) 0%, var(--coffee-dark) 100%);
-    box-shadow: 0 2px 10px rgba(62, 39, 35, 0.3);
+    background: var(--sna-blue);
+    padding: 1rem 0;
+    box-shadow: var(--shadow-md);
 }
 
 .navbar-brand {
@@ -142,140 +191,73 @@ body {
     color: white !important;
 }
 
+.navbar-brand i {
+    color: var(--sna-red);
+}
+
 .nav-link {
-    color: var(--coffee-cream) !important;
-    font-weight: 500;
-    transition: all 0.3s;
-    margin: 0 10px;
+    color: rgba(255,255,255,0.9) !important;
+    transition: all var(--transition-fast);
 }
 
 .nav-link:hover {
     color: white !important;
-    transform: translateY(-2px);
 }
 
-.nav-link.active {
-    color: white !important;
-    border-bottom: 2px solid var(--coffee-accent);
+.btn-outline-light:hover {
+    background: var(--sna-red);
+    border-color: var(--sna-red);
 }
 
-.user-badge {
-    background: var(--coffee-accent);
-    color: var(--coffee-dark);
-    padding: 5px 15px;
+/* ============================================
+   Badges y Etiquetas
+   ============================================ */
+.badge {
+    padding: 5px 12px;
     border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.85rem;
+    font-weight: 500;
 }
 
-/* ============================================
-   Hero Section
-   ============================================ */
-.hero-section {
-    background: linear-gradient(135deg, var(--coffee-brown) 0%, var(--coffee-dark) 100%);
-    color: white;
-    padding: 60px 0;
-    margin-bottom: 40px;
+.badge-success {
+    background: var(--sna-green);
 }
 
-/* ============================================
-   Productos
-   ============================================ */
-.product-card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(62, 39, 35, 0.1);
-    transition: all 0.3s;
-    margin-bottom: 30px;
+.badge-warning {
+    background: var(--sna-yellow);
+    color: var(--sna-dark);
 }
 
-.product-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 30px rgba(62, 39, 35, 0.2);
-}
-
-.product-image {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    background: linear-gradient(135deg, var(--coffee-cream) 0%, var(--coffee-accent) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 5rem;
-    color: var(--coffee-brown);
-}
-
-.product-body {
-    padding: 20px;
-}
-
-.product-title {
-    color: var(--coffee-dark);
-    font-weight: 700;
-    font-size: 1.25rem;
-    margin-bottom: 10px;
-}
-
-.product-description {
-    color: #666;
-    font-size: 0.95rem;
-    margin-bottom: 15px;
-}
-
-.product-price {
-    color: var(--coffee-brown);
-    font-weight: 700;
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-}
-
-.badge-new {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: var(--coffee-accent);
-    color: var(--coffee-dark);
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-weight: 600;
-}
-
-/* ============================================
-   Alertas
-   ============================================ */
-.alert {
-    border-radius: 10px;
-    border: none;
-}
-
-/* ============================================
-   Backgrounds
-   ============================================ */
-.bg-coffee {
-    background-color: var(--coffee-brown);
-}
-
-.bg-coffee-light {
-    background-color: var(--coffee-light);
-}
-
-.bg-coffee-cream {
-    background-color: var(--coffee-cream);
+.badge-danger {
+    background: var(--sna-red);
 }
 
 /* ============================================
    Utilidades
    ============================================ */
-.text-coffee {
-    color: var(--coffee-brown);
+.cursor-pointer {
+    cursor: pointer;
 }
 
-.text-coffee-dark {
-    color: var(--coffee-dark);
+.transition {
+    transition: all var(--transition-normal);
 }
 
-.border-coffee {
-    border-color: var(--coffee-brown) !important;
+.shadow-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.animate-fade-in {
+    animation: fadeIn var(--transition-normal) ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

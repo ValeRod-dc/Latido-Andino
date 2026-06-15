@@ -1,0 +1,122 @@
+/* ============================================
+   Latido Andino - Login (login.css)
+   ============================================ */
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--sna-blue) 0%, #004080 100%);
+}
+
+.login-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    max-width: 500px;
+    width: 100%;
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-header {
+    background: linear-gradient(135deg, var(--sna-blue) 0%, #004080 100%);
+    color: white;
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.login-header i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.login-header h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.login-body {
+    padding: 40px 30px;
+}
+
+/* Role Badges */
+.role-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 5px;
+    transition: all var(--transition-fast);
+}
+
+.role-badge:hover {
+    transform: translateY(-2px);
+}
+
+.role-viajero { background: #E0F7FA; color: #006064; }
+.role-aduanas { background: #E8F0FE; color: var(--sna-blue); }
+.role-sag { background: #E8F5E9; color: #2E7D32; }
+.role-pdi { background: #FFF3E0; color: #E65100; }
+.role-admin { background: #FCE4EC; color: #C2185B; }
+
+/* Demo Users Section */
+.demo-users {
+    background: var(--sna-gray);
+    border-radius: var(--radius-lg);
+    padding: 15px;
+    margin-top: 20px;
+}
+
+/* Botón login */
+.btn-login {
+    background: var(--sna-blue);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all var(--transition-normal);
+    width: 100%;
+}
+
+.btn-login:hover {
+    background: #004080;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .login-card {
+        margin: 10px;
+    }
+    
+    .login-header {
+        padding: 30px 20px;
+    }
+    
+    .login-body {
+        padding: 25px 20px;
+    }
+    
+    .role-badge {
+        font-size: 0.7rem;
+        padding: 6px 12px;
+    }
+}

@@ -1,0 +1,207 @@
+/* ============================================
+   Latido Andino - Pre-registro (pre-registro.css)
+   ============================================ */
+
+/* Progress Steps */
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #ddd;
+    z-index: 1;
+}
+
+.step {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.step-circle {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-weight: bold;
+    transition: all var(--transition-normal);
+}
+
+.step.active .step-circle {
+    background: var(--sna-blue);
+    border-color: var(--sna-blue);
+    color: white;
+    transform: scale(1.1);
+}
+
+.step.completed .step-circle {
+    background: var(--sna-green);
+    border-color: var(--sna-green);
+    color: white;
+}
+
+.step-label {
+    font-size: 0.85rem;
+    color: #666;
+    transition: all var(--transition-normal);
+}
+
+.step.active .step-label {
+    color: var(--sna-blue);
+    font-weight: 600;
+}
+
+/* Form Card */
+.form-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+.form-card-header {
+    background: linear-gradient(135deg, var(--sna-blue) 0%, #004080 100%);
+    color: white;
+    padding: 20px 25px;
+}
+
+.form-card-body {
+    padding: 30px;
+}
+
+/* Form Sections */
+.form-section {
+    display: none;
+    animation: fadeInRight 0.5s ease;
+}
+
+.form-section.active {
+    display: block;
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Navigation Buttons */
+.btn-next {
+    background: var(--sna-blue);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all var(--transition-normal);
+}
+
+.btn-next:hover {
+    background: #004080;
+    transform: translateX(5px);
+}
+
+.btn-prev {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all var(--transition-normal);
+}
+
+.btn-prev:hover {
+    background: #5a6268;
+    transform: translateX(-5px);
+}
+
+.btn-submit {
+    background: var(--sna-green);
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all var(--transition-normal);
+}
+
+.btn-submit:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Vehículo y Mascota Fields */
+#vehiculoFields, #mascotaFields, #destinoFields {
+    animation: fadeIn 0.3s ease;
+    background: var(--sna-gray);
+    padding: 15px;
+    border-radius: var(--radius-md);
+    margin-top: 10px;
+}
+
+/* Productos Select */
+select[multiple] {
+    min-height: 150px;
+}
+
+select[multiple] option {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+select[multiple] option:checked {
+    background: var(--sna-blue) linear-gradient(0deg, var(--sna-blue), var(--sna-blue));
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .progress-steps {
+        display: none;
+    }
+    
+    .form-card-body {
+        padding: 20px;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .btn-next, .btn-prev, .btn-submit {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-card-header h4 {
+        font-size: 1.2rem;
+    }
+    
+    .form-card-body {
+        padding: 15px;
+    }
+}

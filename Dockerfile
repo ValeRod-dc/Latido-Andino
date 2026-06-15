@@ -1,21 +1,23 @@
-FROM php:8.2-apache
+FROM php:8.2-apache-bookworm
 
-# Instalar extensiones necesarias para MongoDB
-RUN apt-get update && apt-get install -y \
-    libssl-dev \
-    && pecl install mongodb \
-    && docker-php-ext-enable mongodb \
-    && apt-get clean
+RUN sed -i 's|http://deb.debian.org|https://deb.debian.org|g; s|http://security.debian.org|https://security.debian.org|g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update \
+    && apt-get install -y \
+        libssl-dev \
+        pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
-# Habilitar mod_rewrite para URLs limpias
+# Instalar extensión MongoDB via PECL
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
+
+# Habilitar mod_rewrite
 RUN a2enmod rewrite
-
-# Configurar Apache para hot-reload
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Copiar configuración de Apache
 COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
 
+# Establecer directorio de trabajo
 WORKDIR /var/www/html
 
-# El código se monta como volumen para hot-reload
+EXPOSE 80
