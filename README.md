@@ -23,37 +23,50 @@ Desarrollado con PHP MVC, MongoDB, Bootstrap y Docker.
 ## 📁 Estructura del Proyecto (EN DESARROLLO)
 
 ```
-php-proyect/
-├── docker-compose.yml          # Configuración Docker
-├── Dockerfile                  # Imagen PHP con extensión MongoDB
-├── apache-config.conf          # Configuración Apache
-├── init-db.js                  # Script de inicialización de BD
-├── start.sh / start.bat        # 🚀 Iniciar aplicación
-├── stop.sh / stop.bat          # 🛑 Detener aplicación
-├── clean.sh / clean.bat        # 🧹 Limpieza completa Docker
-├── docs/                       # 📚 Documentación completa
-│   ├── INDEX.md               # Índice de documentación
-│   ├── QUICKSTART.md          # Guía de inicio rápido
-│   ├── ARCHITECTURE.md        # Arquitectura técnica
-│   ├── COMMANDS.md            # Comandos útiles
-│   ├── TROUBLESHOOTING.md     # Solución de problemas
-│   ├── CHECKLIST.md           # Lista de verificación
-│   └── ...más documentos
+latido-andino/
+├── docker-compose.yml      # Servicios web + MongoDB, puerto 8081:80
+├── Dockerfile              # PHP 8.2 + Apache + extensión MongoDB
+├── apache-config.conf      # Configuración virtual host
+├── init-db.js              # Datos iniciales (usuarios, pasos fronterizos)
+├── start.sh / start.bat    # 🚀 Iniciar aplicación
+├── stop.sh / stop.bat      # 🛑 Detener aplicación
+├── clean.sh / clean.bat    # 🧹 Limpieza completa Docker
+├── .env.example            # Variables de entorno ejemplo
+├── docs/                   # 📚 Documentación técnica detallada
 └── src/
-    ├── controllers/            # Controladores MVC
-    │   ├── AuthController.php
-    │   └── HomeController.php
-    ├── models/                 # Modelos
-    │   ├── User.php
-    │   └── Product.php
-    ├── views/                  # Vistas
-    │   ├── login.php
-    │   └── home.php
-    ├── core/                   # Núcleo del sistema
-    │   └── Database.php
-    └── public/                 # Punto de entrada web
-        ├── index.php
-        └── .htaccess
+├── public/                 # Punto de entrada web
+│ ├── index.php             # Router principal
+│ ├── .htaccess             # Reescritura de URLs
+│ ├── css/                  # Estilos separados
+│ │  ├── style.css          # Estilos Globales
+│ │  ├── home.css           # Estilos para Landing page
+│ │  ├── login.css          # Estilos para Página de login
+│ │  ├── pre-registro.css   # Estilos para Formulario multi-step
+│ │  └── viajero-dashboard.css
+├── core/                       # Núcleo del sistema
+│ └── Database.php              # Singleton para MongoDB
+├── controllers/                # Controladores MVC
+│ ├── HomeController.php        # Landing, términos, contacto
+│ ├── AuthController.php        # Login, logout, redirección por rol
+│ └── TramiteController.php     # Pre-registro, validación, QR
+├── models/                     # Modelos de datos
+│ ├── User.php                  # Usuarios y autenticación
+│ ├── Tramite.php               # Trámites de ingreso/salida
+│ └── Vehiculo.php              # Registro y acuerdo bilateral
+├── services/                   # Lógica de negocio externa
+│ ├── ValidacionService.php         # Orquestación validación cruzada
+│ └── IntegracionMockService.php    # Simulación de APIs (PDI, SAG, Interpol)
+└── views/                          # Vistas organizadas por sección
+├── public/                         # Acceso público
+│ ├── home.php                      # Landing page
+│ ├── pre-registro.php              # Formulario de pre-registro
+│ └── consulta-estado.php           # Ver Estado
+├── auth/                           # Autenticación
+│ └── login.php                     # Login
+├── tramite/                # Trámites
+│ └── pase-agil.php         # Visualización QR
+└── viajero/                # Dashboard del viajero
+└── dashboard.php
 ```
 
 ## 🛠️ Instalación y Uso
