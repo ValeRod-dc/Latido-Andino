@@ -20,7 +20,7 @@ Desarrollado con PHP MVC, MongoDB, Bootstrap y Docker.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del Proyecto (EN DESARROLLO)
 
 ```
 php-proyect/
