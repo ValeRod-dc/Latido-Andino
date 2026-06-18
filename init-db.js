@@ -9,12 +9,12 @@ db.declaraciones_sag.drop();
 db.pasos_fronterizos.drop();
 db.integraciones.drop();
 
-// ============================================
-// USUARIOS con roles específicos
-// ============================================
 // Hash para "123456" (bcrypt)
 const hash = "$2y$10$k3mAM9vNjsDIKdLq3SYIgeKi3B5fw15Lpx4uBnxrftZ3PexqFL.8K";
 
+// ============================================
+// USUARIOS con roles específicos
+// ============================================
 db.usuarios.insertMany([
     {
         name: "Viajero Demo",
@@ -26,10 +26,11 @@ db.usuarios.insertMany([
         created_at: new Date()
     },
     {
-        name: "Funcionario Aduana",
+        name: "Funcionario Aduanas",
         email: "aduanas@aduana.cl",
         password: hash,
         role: "aduanas",
+        rut: "11.111.111-1",
         cargo: "Fiscalizador",
         created_at: new Date()
     },
@@ -38,7 +39,7 @@ db.usuarios.insertMany([
         email: "sag@sag.cl",
         password: hash,
         role: "sag",
-        cargo: "Inspector",
+        rut: "22.222.222-2",
         created_at: new Date()
     },
     {
@@ -46,7 +47,7 @@ db.usuarios.insertMany([
         email: "pdi@pdi.cl",
         password: hash,
         role: "pdi",
-        cargo: "Policía Internacional",
+        rut: "33.333.333-3",
         created_at: new Date()
     },
     {
@@ -54,6 +55,7 @@ db.usuarios.insertMany([
         email: "admin@latidoandino.cl",
         password: hash,
         role: "admin",
+        rut: "99.999.999-9",
         created_at: new Date()
     }
 ]);
@@ -86,7 +88,7 @@ db.pasos_fronterizos.insertMany([
 ]);
 
 // ============================================
-// TRÁMITES DE EJEMPLO
+// TRÁMITES DE EJEMPLO (para el viajero demo)
 // ============================================
 db.tramites.insertMany([
     {
@@ -100,7 +102,7 @@ db.tramites.insertMany([
             identidad: "verificado",
             declaracion_sag: "pendiente"
         },
-        pase_agil_qr: "MOCK_QR_001",
+        pase_agil_qr: "LAT-ABC123-20250315",
         validacion_cruzada: {
             pdi: "aprobado",
             sag: "aprobado",
@@ -130,7 +132,8 @@ db.vehiculos.insertMany([
     }
 ]);
 
-print("Base de datos Latido Andino inicializada");
-print(`Usuarios: ${db.usuarios.countDocuments()}`);
-print(`Pasos fronterizos: ${db.pasos_fronterizos.countDocuments()}`);
-print(`Vehículos: ${db.vehiculos.countDocuments()}`);
+print("✅ Base de datos Latido Andino inicializada");
+print(`📊 Usuarios: ${db.usuarios.countDocuments()}`);
+print(`🚏 Pasos fronterizos: ${db.pasos_fronterizos.countDocuments()}`);
+print(`🚗 Vehículos: ${db.vehiculos.countDocuments()}`);
+print(`📄 Trámites: ${db.tramites.countDocuments()}`);

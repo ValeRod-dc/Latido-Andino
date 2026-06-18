@@ -2,7 +2,7 @@
 session_start();
 
 // Configuración
-define('MONGO_HOST', getenv('MONGO_HOST') ?: 'localhost'); //mongodb??
+define('MONGO_HOST', getenv('MONGO_HOST') ?: 'mongodb');
 define('MONGO_PORT', getenv('MONGO_PORT') ?: '27017');
 define('MONGO_DB', getenv('MONGO_DB') ?: 'latido_andino');
 
@@ -27,13 +27,16 @@ spl_autoload_register(function ($class) {
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = trim($uri, '/');
 
-// Rutas públicas
-$publicRoutes = ['', 'home', 'login', 'auth/login', 'register', 'auth/register', 
-                 'tramite/pre-registro', 'tramite/procesar', 'tramite/estado'];
+// Rutas públicas (no requieren autenticación)
+$publicRoutes = [
+    '', 'home', 
+    'login', 'auth/login', 
+    'register', 'auth/register',
+    'terminos', 'privacidad', 'contacto', 'contacto/enviar'
+];
 
 // Verificar autenticación para rutas protegidas
 if (!in_array($uri, $publicRoutes) && empty($_SESSION['user_id'])) {
-    // Para APIs, devolver 401
     if (strpos($uri, 'api/') === 0) {
         http_response_code(401);
         echo json_encode(['error' => 'No autenticado']);
@@ -45,28 +48,26 @@ if (!in_array($uri, $publicRoutes) && empty($_SESSION['user_id'])) {
 
 // Routing
 switch ($uri) {
-    // Página principal
+    // Página principal (landing)
     case '':
     case 'home':
         $controller = new HomeController();
         $controller->index();
         break;
 
+    // Informativas
     case 'terminos':
-    $controller = new HomeController();
-    $controller->terminos();
-    break;
-
+        $controller = new HomeController();
+        $controller->terminos();
+        break;
     case 'privacidad':
         $controller = new HomeController();
         $controller->privacidad();
         break;
-
     case 'contacto':
         $controller = new HomeController();
         $controller->contacto();
         break;
-
     case 'contacto/enviar':
         $controller = new HomeController();
         $controller->procesarContacto();
@@ -77,48 +78,59 @@ switch ($uri) {
         $controller = new AuthController();
         $controller->login();
         break;
-    
     case 'auth/login':
         $controller = new AuthController();
         $controller->processLogin();
         break;
-    
     case 'logout':
         $controller = new AuthController();
         $controller->logout();
         break;
+    case 'register':
+        $controller = new AuthController();
+        $controller->register();
+        break;
+    case 'auth/register':
+        $controller = new AuthController();
+        $controller->processRegister();
+        break;
     
-    // Trámites (viajeros)
-    case 'tramite/pre-registro':
+    // Portal por rol
+    case 'portal/viajero':
+        $controller = new PortalController();
+        $controller->viajero();
+        break;
+    case 'portal/funcionario':
+        $controller = new PortalController();
+        $controller->funcionario();
+        break;
+    case 'portal/admin':
+        $controller = new PortalController();
+        $controller->admin();
+        break;
+    
+    // Trámites (públicos o protegidos según corresponda)
+    case 'pre-registro':
+        // Si quieres mantener la página de pre-registro
         $controller = new TramiteController();
         $controller->preRegistro();
         break;
-    
-    case 'tramite/procesar':
-        $controller = new TramiteController();
-        $controller->procesarPreRegistro();
-        break;
-    
-    case 'tramite/estado':
+    case 'consulta-estado':
         $controller = new TramiteController();
         $controller->consultarEstado();
         break;
-    
-    // Si es pase-agil/{id}
-    default:
-        if (preg_match('/^tramite\/pase-agil\/(.+)$/', $uri, $matches)) {
+    case 'tramite/pase-agil':
+        // Manejo de parámetro
+        if (isset($_GET['id'])) {
             $controller = new TramiteController();
-            $controller->mostrarPaseAgil($matches[1]);
-            break;
+            $controller->mostrarPaseAgil($_GET['id']);
+        } else {
+            http_response_code(404);
+            echo "Página no encontrada";
         }
-        
-        // Dashboard funcionarios (requiere rol específico)
-        if (strpos($uri, 'funcionario/') === 0 && isset($_SESSION['user_role'])) {
-            $controller = new DashboardController();
-            $controller->index();
-            break;
-        }
-        
+        break;
+    
+    default:
         http_response_code(404);
         echo "Página no encontrada";
         break;
