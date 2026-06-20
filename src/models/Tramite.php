@@ -100,7 +100,10 @@ class Tramite {
     }
 
     public function registrarIncidencia($tramiteId, $tipo, $descripcion, $funcionarioId) {
+        $codigo = $this->siguienteCodigoIncidencia();
+
         $incidencia = [
+            'codigo' => $codigo,
             'tramite_id' => $tramiteId,
             'tipo' => $tipo,
             'descripcion' => $descripcion,
@@ -108,7 +111,15 @@ class Tramite {
             'estado' => 'abierta',
             'created_at' => new MongoDB\BSON\UTCDateTime()
         ];
-        return $this->db->insert('incidencias', $incidencia);
+
+        $id = $this->db->insert('incidencias', $incidencia);
+
+        return $id ? $codigo : false;
+    }
+
+    private function siguienteCodigoIncidencia() {
+        $total = count($this->db->find('incidencias', []));
+        return '#INC-' . str_pad((string)($total + 1), 3, '0', STR_PAD_LEFT);
     }
 
     public function actualizarFlujo($tramiteId, $datos) {

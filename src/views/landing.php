@@ -22,14 +22,11 @@
           <polygon points="71,8 72.4,12.4 77,12.4 73.3,15 74.7,19.4 71,16.8 67.3,19.4 68.7,15 65,12.4 69.6,12.4" fill="white"/>
         </svg>
         <div>
-          <div class="modal-logo-txt">Latido Andino</div>
+          <span id="modal-titulo">Iniciar Sesión</span>
           <span class="modal-logo-sub">Servicio Nacional de Aduanas · Chile</span>
         </div>
       </div>
       <button class="modal-cerrar" onclick="cerrarModal()">✕</button>
-      <div class="modal-titulo-wrap">
-        <span id="modal-titulo">Iniciar Sesión</span>
-      </div>
     </div>
 
     <div class="modal-body">

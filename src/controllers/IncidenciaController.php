@@ -25,14 +25,17 @@ class IncidenciaController {
             return;
         }
 
-        $resultado = $this->tramiteModel->registrarIncidencia(
+        $codigo = $this->tramiteModel->registrarIncidencia(
             $tramiteId,
             $tipo,
             $descripcion,
             $_SESSION['user_id']
         );
 
-        echo json_encode(['success' => $resultado]);
+        echo json_encode([
+            'success' => (bool)$codigo,
+            'codigo' => $codigo ?: null
+        ]);
     }
 
     public function listar() {

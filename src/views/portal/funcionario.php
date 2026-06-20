@@ -307,8 +307,15 @@ $alertas = [
     <h3 style="color:var(--azul); margin-bottom:20px;">⚠️ Registrar Incidencia</h3>
     <form id="formIncidencia">
       <div class="form-group">
-        <label>ID del trámite</label>
-        <input type="text" name="tramite_id" id="incidencia_tramite_id" placeholder="Ej: 67d8f9a1b2c3d4e5f6a7b8c9" required>
+        <label>Trámite asociado</label>
+        <select name="tramite_id" id="incidencia_tramite_id" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:var(--radio);">
+          <option value="">Seleccione un trámite...</option>
+          <?php foreach ($tramitesPendientes as $t): ?>
+            <option value="<?= htmlspecialchars((string)$t->_id) ?>">
+              #<?= substr((string)$t->_id, -6) ?> — <?= htmlspecialchars($t->viajero_nombre) ?> (<?= htmlspecialchars($t->viajero_rut) ?>)
+            </option>
+          <?php endforeach; ?>
+        </select>
       </div>
       <div class="form-group">
         <label>Tipo de incidencia</label>
@@ -362,8 +369,33 @@ document.getElementById('formIncidencia').addEventListener('submit', async funct
   try {
     const response = await fetch('/incidencia/registrar', { method: 'POST', body: formData });
     const data = await response.json();
-    alert(data.success ? '✅ Incidencia registrada correctamente' : '❌ Error: ' + (data.message || ''));
-    if (data.success) cerrarModalIncidencia();
+
+    if (data.success) {
+      alert('Incidencia ' + data.codigo + ' registrada correctamente');
+
+      // Agregar fila a la tabla de incidencias sin recargar la página
+      const select = document.getElementById('incidencia_tramite_id');
+      const viajero = select.options[select.selectedIndex].text.split('—')[1]?.split('(')[0]?.trim() || '—';
+      const tipoTexto = this.querySelector('select[name="tipo"]').selectedOptions[0].text;
+      const hora = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+
+      const tbody = document.querySelector('#tab-incidencias tbody');
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td><strong>${data.codigo}</strong></td>
+        <td>${viajero}</td>
+        <td><span class="badge badge-amarillo">Aviso</span></td>
+        <td>${tipoTexto}</td>
+        <td>${hora}</td>
+        <td><span class="badge badge-amarillo">En revisión</span></td>
+      `;
+      tbody.prepend(fila);
+
+      this.reset();
+      cerrarModalIncidencia();
+    } else {
+      alert('❌ Error: ' + (data.message || ''));
+    }
   } catch (error) {
     alert('❌ Error de conexión al servidor');
   } finally {
