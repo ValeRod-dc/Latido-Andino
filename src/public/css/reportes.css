@@ -1,0 +1,172 @@
+/* ============================================
+   Latido Andino - Reportes (reportes.css)
+   Estilos específicos para la página de generación de reportes
+   ============================================ */
+
+.reporte-container {
+    max-width: 640px;
+    margin: 48px auto;
+    padding: 0 20px;
+}
+
+.reporte-card {
+    background: #fff;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    padding: 36px 40px;
+    transition: box-shadow 0.2s ease;
+}
+
+.reporte-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.reporte-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+}
+
+.reporte-header .icono {
+    font-size: 2rem;
+    color: var(--sna-blue);
+}
+
+.reporte-header h2 {
+    font-family: 'Roboto Slab', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--sna-blue-dark);
+    margin: 0;
+}
+
+.reporte-sub {
+    color: #64748B;
+    font-size: 0.95rem;
+    margin-bottom: 28px;
+    margin-top: -4px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+/* Grid del formulario */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 24px;
+}
+
+.form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+/* Estilos de campos (heredan de style.css, pero especificamos para no pisar) */
+.reporte-card .form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #1E293B;
+    margin-bottom: 5px;
+    letter-spacing: 0.01em;
+}
+
+.reporte-card .form-group label .required {
+    color: var(--sna-red, #D92B2B);
+    margin-left: 2px;
+}
+
+.reporte-card .form-group input,
+.reporte-card .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #D1D5DB;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-family: 'Roboto', sans-serif;
+    background: #FAFBFC;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    color: #1A202C;
+}
+
+.reporte-card .form-group input:focus,
+.reporte-card .form-group select:focus {
+    outline: none;
+    border-color: var(--sna-blue);
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.12);
+    background: #fff;
+}
+
+/* Botón generar reporte */
+.btn-reporte {
+    background: var(--sna-blue);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-reporte:hover {
+    background: var(--sna-blue-dark);
+    transform: translateY(-1px);
+}
+
+.btn-reporte i {
+    font-size: 1.1rem;
+}
+
+/* Enlace volver */
+.back-link-wrap {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-link-wrap a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--sna-blue);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.back-link-wrap a:hover {
+    color: var(--sna-blue-dark);
+}
+
+.back-link-wrap a i {
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 550px) {
+    .reporte-card {
+        padding: 24px 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid .full-width {
+        grid-column: 1;
+    }
+
+    .reporte-header h2 {
+        font-size: 1.3rem;
+    }
+}

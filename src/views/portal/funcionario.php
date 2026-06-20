@@ -1,7 +1,9 @@
 <?php
+// Datos que vienen del PortalController::funcionario()
 $tramitesPendientes = $tramitesPendientes ?? [];
+$userName = $_SESSION['user_name'] ?? 'Funcionario';
 
-// Helpers
+// Helpers para badges
 function badgeEstado(string $estado): string {
     return match($estado) {
         'aprobado'  => 'badge-verde',
@@ -10,6 +12,7 @@ function badgeEstado(string $estado): string {
     };
 }
 
+// Datos estáticos de ejemplo (pueden venir de BD en el futuro)
 $integraciones = [
     ['🔵', 'PDI',          'online', '0.8s'],
     ['🌿', 'SAG',          'slow',   '4.2s'],
@@ -40,12 +43,12 @@ $alertas = [
 ];
 ?>
 
-<!-- Banner -->
+<!-- ===== BANNER SUPERIOR ===== -->
 <div class="banner-funcionario">
   <div class="banner-funcionario-inner">
     <div>
       <div class="cargo">Panel de Fiscalización</div>
-      <div class="nombre"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Inspector') ?> · Turno Activo</div>
+      <div class="nombre"><?= htmlspecialchars($userName) ?> · Turno Activo</div>
     </div>
     <div style="display:flex; gap:12px; align-items:center;">
       <span style="font-size:13px; color:rgba(255,255,255,0.7);">Turno activo: 08:00 – 20:00 hrs &nbsp;·&nbsp; Ventanilla 3</span>
@@ -54,12 +57,19 @@ $alertas = [
   </div>
 </div>
 
+<!-- ===== MAIN ===== -->
 <main class="main">
 
-  <!-- Tabs -->
+  <!-- ===== TABS ===== -->
   <div class="panel-tabs">
     <?php
-    $tabs = ['dashboard' => 'Dashboard', 'validar' => 'Validar Documentos', 'monitor' => 'Monitor Tiempo Real', 'incidencias' => 'Incidencias', 'reportes' => 'Reportes'];
+    $tabs = [
+        'dashboard'   => 'Dashboard',
+        'validar'     => 'Validar Documentos',
+        'monitor'     => 'Monitor Tiempo Real',
+        'incidencias' => 'Incidencias',
+        'reportes'    => 'Reportes'
+    ];
     foreach ($tabs as $id => $label):
     ?>
       <button class="ptab <?= $id === 'dashboard' ? 'active' : '' ?>" onclick="cambiarTab('<?= $id ?>', this)">
@@ -68,9 +78,12 @@ $alertas = [
     <?php endforeach; ?>
   </div>
 
+  <!-- ========================================================== -->
   <!-- ===== TAB: DASHBOARD ===== -->
+  <!-- ========================================================== -->
   <div class="tab-section" id="tab-dashboard">
 
+    <!-- Estadísticas rápidas -->
     <div class="dashboard-grid">
       <div class="dash-card"><div class="dash-num">342</div><div class="dash-label">Trámites Pendientes</div></div>
       <div class="dash-card"><div class="dash-num verde">289</div><div class="dash-label">Aprobados Hoy</div></div>
@@ -78,6 +91,17 @@ $alertas = [
       <div class="dash-card"><div class="dash-num amarillo">39</div><div class="dash-label">En Revisión Manual</div></div>
     </div>
 
+    <!-- Botones de acciones rápidas -->
+    <div style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+      <a href="/reporte" class="btn-primario" style="text-decoration:none; padding:10px 20px; display:inline-block;">
+        📊 Generar Reportes
+      </a>
+      <button class="btn-primario" style="background:var(--rojo); border:none; padding:10px 20px; cursor:pointer;" onclick="abrirModalIncidencia()">
+        ⚠️ Registrar Incidencia
+      </button>
+    </div>
+
+    <!-- Tabla de trámites pendientes -->
     <div class="tabla-tramites">
       <div class="tabla-header">
         <h3>Cola de Trámites Pendientes</h3>
@@ -90,33 +114,64 @@ $alertas = [
       <table>
         <thead>
           <tr>
-            <th>N° Trámite</th><th>Viajero</th><th>RUT / Pasaporte</th>
-            <th>Tipo</th><th>Documentos</th><th>Validación</th><th>Estado</th><th>Acciones</th>
+            <th>N° Trámite</th>
+            <th>Viajero</th>
+            <th>RUT / Pasaporte</th>
+            <th>Tipo</th>
+            <th>Documentos</th>
+            <th>Validación</th>
+            <th>Estado</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($tramitesPendientes as $t): ?>
-          <tr>
-            <td><strong>#<?= substr((string)$t->_id, -6) ?></strong></td>
-            <td><?= htmlspecialchars($t->viajero_nombre) ?></td>
-            <td><?= htmlspecialchars($t->viajero_rut) ?></td>
-            <td><span class="badge badge-azul"><?= ucfirst($t->tipo) ?></span></td>
-            <td>✓ <?= count((array)$t->documentos) ?>/4</td>
-            <td><span class="badge badge-verde">✓ 7/7 APIs</span></td>
-            <td><span class="badge <?= badgeEstado($t->estado) ?>"><?= ucfirst($t->estado) ?></span></td>
-            <td>
-              <button class="btn-accion">Ver QR</button>
-              <button class="btn-accion outline">Detalle</button>
-            </td>
-          </tr>
-          <?php endforeach; ?>
+          <?php if (empty($tramitesPendientes)): ?>
+            <tr>
+              <td colspan="8" style="text-align:center; padding:30px; color:var(--gris-muted);">
+                No hay trámites pendientes en este momento
+              </td>
+            </tr>
+          <?php else: ?>
+            <?php foreach ($tramitesPendientes as $t): ?>
+            <tr>
+              <td><strong>#<?= substr((string)$t->_id, -6) ?></strong></td>
+              <td><?= htmlspecialchars($t->viajero_nombre ?? 'Sin nombre') ?></td>
+              <td><?= htmlspecialchars($t->viajero_rut ?? 'N/A') ?></td>
+              <td><span class="badge badge-azul"><?= ucfirst($t->tipo ?? 'Ingreso') ?></span></td>
+              <td>✓ <?= isset($t->documentos) ? count((array)$t->documentos) : 0 ?>/4</td>
+              <td>
+                <?php
+                  $estadoValidacion = $t->validacion_cruzada ?? null;
+                  if ($estadoValidacion) {
+                    echo '<span class="badge badge-verde">✓ 7/7 APIs</span>';
+                  } else {
+                    echo '<span class="badge badge-amarillo">⏳ Pendiente</span>';
+                  }
+                ?>
+              </td>
+              <td><span class="badge <?= badgeEstado($t->estado ?? 'pendiente') ?>"><?= ucfirst($t->estado ?? 'pendiente') ?></span></td>
+              <td>
+                <!-- 🟢 BOTONES DE REGISTRO DE FLUJO (RF-06) -->
+                <button class="btn-accion" style="background:var(--verde);" onclick="registrarFlujo('<?= (string)$t->_id ?>', 'ingreso')">
+                  🟢 Ingreso
+                </button>
+                <button class="btn-accion" style="background:var(--rojo);" onclick="registrarFlujo('<?= (string)$t->_id ?>', 'egreso')">
+                  🔴 Egreso
+                </button>
+                <button class="btn-accion outline">Detalle</button>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          <?php endif; ?>
         </tbody>
       </table>
     </div>
 
   </div><!-- /tab-dashboard -->
 
+  <!-- ========================================================== -->
   <!-- ===== TAB: VALIDAR DOCUMENTOS ===== -->
+  <!-- ========================================================== -->
   <div class="tab-section" id="tab-validar" style="display:none;">
     <div class="tabla-tramites">
       <div class="tabla-header">
@@ -146,7 +201,9 @@ $alertas = [
     </div>
   </div><!-- /tab-validar -->
 
+  <!-- ========================================================== -->
   <!-- ===== TAB: MONITOR TIEMPO REAL ===== -->
+  <!-- ========================================================== -->
   <div class="tab-section" id="tab-monitor" style="display:none;">
 
     <div class="section-heading"><span>Monitoreo Tiempo Real</span></div>
@@ -182,6 +239,7 @@ $alertas = [
       </div>
     </div>
 
+    <!-- Integraciones -->
     <div class="integraciones">
       <h3>Estado de Integraciones Interinstitucionales</h3>
       <div class="inst-grid">
@@ -198,7 +256,9 @@ $alertas = [
 
   </div><!-- /tab-monitor -->
 
+  <!-- ========================================================== -->
   <!-- ===== TAB: INCIDENCIAS ===== -->
+  <!-- ========================================================== -->
   <div class="tab-section" id="tab-incidencias" style="display:none;">
     <div class="tabla-tramites">
       <div class="tabla-header"><h3>Registro de Incidencias</h3></div>
@@ -222,7 +282,9 @@ $alertas = [
     </div>
   </div><!-- /tab-incidencias -->
 
+  <!-- ========================================================== -->
   <!-- ===== TAB: REPORTES ===== -->
+  <!-- ========================================================== -->
   <div class="tab-section" id="tab-reportes" style="display:none;">
     <div class="section-heading"><span>Resumen del Turno</span></div>
     <div class="dashboard-grid" style="grid-template-columns: repeat(3, 1fr);">
@@ -237,11 +299,104 @@ $alertas = [
 
 </main>
 
+<!-- ========================================================== -->
+<!-- ===== MODAL PARA REGISTRAR INCIDENCIA (RF-09) ===== -->
+<!-- ========================================================== -->
+<div id="modalIncidencia" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:999; backdrop-filter:blur(3px);">
+  <div style="background:#fff; padding:30px; border-radius:12px; max-width:520px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:modalEntrada 0.25s ease;">
+    <h3 style="color:var(--azul); margin-bottom:20px;">⚠️ Registrar Incidencia</h3>
+    <form id="formIncidencia">
+      <div class="form-group">
+        <label>ID del trámite</label>
+        <input type="text" name="tramite_id" id="incidencia_tramite_id" placeholder="Ej: 67d8f9a1b2c3d4e5f6a7b8c9" required>
+      </div>
+      <div class="form-group">
+        <label>Tipo de incidencia</label>
+        <select name="tipo" required>
+          <option value="documentacion_invalida">📄 Documentación inválida</option>
+          <option value="alerta_sanitaria">⚠️ Alerta sanitaria</option>
+          <option value="inconsistencia">📊 Inconsistencia en datos</option>
+          <option value="otro">🔹 Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Descripción detallada</label>
+        <textarea name="descripcion" rows="4" placeholder="Describa la anomalía o situación..." required></textarea>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button type="submit" class="btn-primario" style="border:none; cursor:pointer;">✅ Registrar Incidencia</button>
+        <button type="button" onclick="cerrarModalIncidencia()" style="background:#ccc; border:none; padding:10px 20px; border-radius:var(--radio); font-weight:600; cursor:pointer;">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ========================================================== -->
+<!-- ===== JAVASCRIPT ===== -->
+<!-- ========================================================== -->
 <script>
+// ===== CAMBIO DE TABS =====
 function cambiarTab(id, btn) {
   document.querySelectorAll('.tab-section').forEach(s => s.style.display = 'none');
   document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + id).style.display = 'block';
   btn.classList.add('active');
 }
+
+// ===== MODAL DE INCIDENCIAS =====
+function abrirModalIncidencia() {
+  document.getElementById('modalIncidencia').style.display = 'flex';
+}
+function cerrarModalIncidencia() {
+  document.getElementById('modalIncidencia').style.display = 'none';
+}
+
+document.getElementById('formIncidencia').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = '⏳ Enviando...';
+  submitBtn.disabled = true;
+
+  try {
+    const response = await fetch('/incidencia/registrar', { method: 'POST', body: formData });
+    const data = await response.json();
+    alert(data.success ? '✅ Incidencia registrada correctamente' : '❌ Error: ' + (data.message || ''));
+    if (data.success) cerrarModalIncidencia();
+  } catch (error) {
+    alert('❌ Error de conexión al servidor');
+  } finally {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  }
+});
+
+// ===== REGISTRO DE FLUJO (RF-06) =====
+async function registrarFlujo(tramiteId, tipo) {
+  if (!confirm(`¿Registrar ${tipo === 'ingreso' ? 'INGRESO' : 'EGRESO'} para el trámite #${tramiteId.substring(0,6)}?`)) return;
+
+  const formData = new FormData();
+  formData.append('tramite_id', tramiteId);
+  formData.append('tipo', tipo);
+
+  try {
+    const response = await fetch('/tramite/registrar-flujo', { method: 'POST', body: formData });
+    const data = await response.json();
+    alert(data.success ? '✅ Registro de flujo exitoso' : '❌ Error: ' + (data.message || ''));
+    if (data.success) location.reload();
+  } catch (error) {
+    alert('❌ Error de conexión al servidor');
+  }
+}
+
+// ===== CERRAR MODAL CON ESCAPE =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') cerrarModalIncidencia();
+});
+
+// ===== CERRAR MODAL HACIENDO CLICK FUERA =====
+document.getElementById('modalIncidencia').addEventListener('click', function(e) {
+  if (e.target === this) cerrarModalIncidencia();
+});
 </script>

@@ -13,9 +13,10 @@
   <div class="topbar-inner">
     <span>🇨🇱 &nbsp;Gobierno de Chile &nbsp;·&nbsp; Ministerio de Hacienda</span>
     <div>
-      <a href="#">Contacto</a>
-      <a href="#">Accesibilidad</a>
-      <a href="#">English</a>
+      <a href="/contacto">Contacto</a>
+      <a href="/accesibilidad">Accesibilidad</a>
+      <a href="/terminos">Términos</a>
+      <a href="/privacidad">Privacidad</a>
     </div>
   </div>
 </div>
@@ -66,12 +67,10 @@ if ($rol === 'viajero') {
     </div>
     <div class="footer-col">
       <h5>Portal Viajero</h5>
-      <a href="#">Crear Cuenta</a><a href="#">Pre-Registro de Cruce</a><a href="#">Consultar Estado de Trámite</a><a href="#">Mi Pase Ágil QR</a><a href="#">Historial de Cruces</a>
-    </div>
+      <a href="/pre-registro">Pre-Registro de Cruce</a><a href="/consulta-estado">Consultar Estado de Trámite</a><a href="/mi-pase-agil">Mi Pase Ágil QR</a>    </div>
     <div class="footer-col">
       <h5>Institucional</h5>
-      <a href="https://www.aduana.cl" target="_blank">Aduana Chile →</a><a href="https://www.pdichile.cl" target="_blank">PDI Chile →</a><a href="#">Ministerio de Hacienda</a><a href="#">Política de Privacidad (Ley 19.628)</a><a href="#">Términos de Uso</a>
-    </div>
+      <a href="https://www.aduana.cl" target="_blank">Aduana Chile →</a><a href="https://www.pdichile.cl" target="_blank">PDI Chile →</a><a href="/privacidad">Política de Privacidad (Ley 19.628)</a><a href="/terminos">Términos de Uso</a>    </div>
   </div>
   <div class="footer-bottom">
     <span>© 2025 Servicio Nacional de Aduanas · Gobierno de Chile</span>

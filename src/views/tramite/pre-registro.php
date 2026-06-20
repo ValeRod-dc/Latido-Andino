@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-     <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Latido Andino - Pre-registro Aduanero</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/portal.css">
     <link rel="stylesheet" href="/css/pre-registro.css">
 </head>
@@ -16,9 +17,10 @@
   <div class="topbar-inner">
     <span>🇨🇱 &nbsp;Gobierno de Chile &nbsp;·&nbsp; Ministerio de Hacienda</span>
     <div>
-      <a href="#">Contacto</a>
-      <a href="#">Accesibilidad</a>
-      <a href="#">English</a>
+        <a href="/contacto">Contacto</a>
+        <a href="/accesibilidad">Accesibilidad</a>
+        <a href="/terminos">Términos</a>
+        <a href="/privacidad">Privacidad</a>    
     </div>
   </div>
 </div>
@@ -35,8 +37,8 @@
         <span class="subtitulo">Servicio Nacional de Aduanas · Paso Los Libertadores</span>
         </div>
         <nav class="header-nav">
-        <a href="/login" class="btn-logout" style="text-decoration:none;">
-            <i class="bi bi-person-badge"></i> Funcionarios
+        <a href="/login" class="btn-home" style="text-decoration:none;">
+            <i class="bi bi-house-fill"></i> Página Principal
         </a>
         </nav>
     </div>

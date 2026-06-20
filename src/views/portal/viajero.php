@@ -52,28 +52,28 @@ $qrData = $qrData ?? null;
   <p class="section-sub" style="margin-bottom:24px;">Selecciona el trámite que necesitas realizar</p>
   <div class="modulos-grid">
     <div class="modulo-card">
-      <div class="modulo-icono"><svg fill="none" stroke="#1565C0" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
-      <h3>Crear Cuenta</h3><p>Regístrate para acceder a todos los servicios de pre-cruce.</p><a href="#" class="modulo-link">Registrarme →</a>
+      <div class="modulo-icono"><svg fill="none" stroke="#1565C0" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></div>
+      <h3>Cerrar Sesión</h3><p>Finaliza tu sesión de forma segura en este dispositivo.</p><a href="/logout" class="modulo-link">Cerrar Sesión →</a>
     </div>
     <div class="modulo-card rojo">
       <div class="modulo-icono"><svg fill="none" stroke="#D92B2B" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
-      <h3>Pre-Registro de Cruce</h3><p>Completa tu declaración e ingresa documentos de manera anticipada.</p><a href="#" class="modulo-link">Iniciar Pre-Registro →</a>
+      <h3>Pre-Registro de Cruce</h3><p>Completa tu declaración e ingresa documentos de manera anticipada.</p><a href="/pre-registro" class="modulo-link">Iniciar Pre-Registro →</a>
     </div>
     <div class="modulo-card">
       <div class="modulo-icono"><svg fill="none" stroke="#1565C0" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
-      <h3>Consultar Estado</h3><p>Revisa el avance de tu trámite en tiempo real.</p><a href="#" class="modulo-link">Consultar Trámite →</a>
+      <h3>Consultar Estado</h3><p>Revisa el avance de tu trámite en tiempo real.</p><a href="/consulta-estado" class="modulo-link">Consultar Trámite →</a>
     </div>
     <div class="modulo-card verde">
       <div class="modulo-icono"><svg fill="none" stroke="#1B7A3C" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 4v1m6.364 1.636l-.707.707M20 12h-1M17.657 17.657l-.707-.707M12 20v-1M6.343 17.657l.707.707M4 12H3M6.343 6.343l.707.707"/></svg></div>
-      <h3>Mi Pase Ágil QR</h3><p>Descarga y presenta tu código QR al llegar al paso fronterizo.</p><a href="#" class="modulo-link">Ver mi Pase →</a>
+      <h3>Mi Pase Ágil QR</h3><p>Descarga y presenta tu código QR al llegar al paso fronterizo.</p><a href="/mi-pase-agil" class="modulo-link">Ver mi Pase →</a>
     </div>
     <div class="modulo-card">
       <div class="modulo-icono"><svg fill="none" stroke="#1565C0" stroke-width="2" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg></div>
-      <h3>Historial de Cruces</h3><p>Accede al registro completo de tus pasos fronterizos.</p><a href="#" class="modulo-link">Ver Historial →</a>
+      <h3>Historial de Cruces</h3><p>Accede al registro completo de tus pasos fronterizos.</p><a href="/consulta-estado" class="modulo-link">Ver Historial →</a>
     </div>
     <div class="modulo-card">
       <div class="modulo-icono"><svg fill="none" stroke="#1565C0" stroke-width="2" viewBox="0 0 24 24"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-      <h3>Ayuda y Normativa</h3><p>Consulta qué documentos necesitas según tu perfil.</p><a href="#" class="modulo-link">Consultar →</a>
+      <h3>Ayuda y Normativa</h3><p>Consulta qué documentos necesitas según tu perfil.</p><a href="/ayuda" class="modulo-link">Consultar →</a>
     </div>
   </div>
 

@@ -45,7 +45,7 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.topbar a { color: rgba(255,255,255,0.7); text-decoration: none; margin-left: 16px; }
+.topbar a { color: rgba(255,255,255,0.7); text-decoration: none; margin-left: 14px; }
 .topbar a:hover { color: #fff; }
 
 /* HEADER */
@@ -118,6 +118,20 @@ body {
   transition: background 0.15s;
 }
 .btn-logout:hover { background: var(--rojo-oscuro); }
+
+.btn-home {
+  background: var(--azul);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: var(--radio);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-home:hover { background: var(--azul-medio); color: #fff; }
 
 /* HERO — viajero */
 .hero {
@@ -718,6 +732,100 @@ tr:hover td { background: rgba(21,101,192,0.02); }
   border-color: var(--azul);
   background: #EFF6FF;
   color: var(--azul);
+}
+
+/* ============================================
+   Tarjeta de formulario / resultado (estado.php, pase-agil.php)
+   ============================================ */
+.form-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(13, 71, 161, 0.08), 0 1px 3px rgba(0,0,0,0.06);
+    overflow: hidden;
+    border: 1px solid var(--gris-borde);
+}
+
+.form-card-header {
+    background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%);
+    color: white;
+    padding: 24px 28px;
+    position: relative;
+}
+
+.form-card-header h4 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-card-header h4 i {
+    font-size: 1.1rem;
+}
+
+.form-card-header p {
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.85) !important;
+}
+
+.form-card-body {
+    padding: 28px;
+}
+
+/* Filas de la lista de trámites */
+.form-card-body .list-group-item {
+    border: none;
+    border-bottom: 1px solid var(--gris-borde);
+    padding: 18px 4px;
+    transition: background 0.15s ease;
+}
+
+.form-card-body .list-group-item:first-child { padding-top: 4px; }
+.form-card-body .list-group-item:last-child { border-bottom: none; padding-bottom: 4px; }
+.form-card-body .list-group-item:hover { background: var(--gris-claro); }
+
+.form-card-body .badge {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+}
+
+.btn-next {
+    background: var(--azul);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: var(--radio);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.btn-next:hover {
+    background: var(--azul-medio);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(21, 101, 192, 0.25);
+}
+
+.btn-prev {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: var(--radio);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.btn-prev:hover {
+    background: #5a6268;
+    color: white;
+    transform: translateY(-1px);
 }
 
 /* RESPONSIVE */
