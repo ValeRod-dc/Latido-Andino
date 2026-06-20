@@ -131,7 +131,7 @@ Abre tu navegador en: **http://localhost:8081**
 | SAG           | sag@sag.cl               | 123456     |
 | PDI           | pdi@pdi.cl               | 123456     |
 | Administrador | admin@latidoandino.cl    | 123456     |
-|
+
 
     ℹ️ Todos los usuarios tienen la misma contraseña.
     El sistema redirige automáticamente al dashboard correspondiente según el rol.
