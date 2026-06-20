@@ -93,10 +93,10 @@ $alertas = [
 
     <!-- Botones de acciones rápidas -->
     <div style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
-      <a href="/reporte" class="btn-primario" style="text-decoration:none; padding:10px 20px; display:inline-block;">
+      <a href="/reporte" class="btn-reporte" style="text-decoration:none; padding:10px 20px; display:inline-block;">
         📊 Generar Reportes
       </a>
-      <button class="btn-primario" style="background:var(--rojo); border:none; padding:10px 20px; cursor:pointer;" onclick="abrirModalIncidencia()">
+      <button class="btn-primario" onclick="abrirModalIncidencia()">
         ⚠️ Registrar Incidencia
       </button>
     </div>

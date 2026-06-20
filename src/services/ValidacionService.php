@@ -21,6 +21,10 @@ class ValidacionService {
             'interpol' => $this->integracionMock->consultarInterpol($rut),
             'registro_civil' => $this->integracionMock->consultarRegistroCivil($rut)
         ];
+
+        if (!empty($datosAdicionales['vehiculo']['patente'])) {
+            $resultados['rnv'] = $this->integracionMock->consultarRNV($datosAdicionales['vehiculo']['patente']);
+        }
         
         $tiempoRespuesta = (microtime(true) - $inicio) * 1000;
         

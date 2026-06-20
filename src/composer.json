@@ -1,0 +1,7 @@
+{
+    "name": "root/html",
+    "require": {
+        "phpoffice/phpspreadsheet": "^5.8",
+        "dompdf/dompdf": "^3.1"
+    }
+}

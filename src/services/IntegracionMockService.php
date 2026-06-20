@@ -137,4 +137,31 @@ class IntegracionMockService {
             'requiere_verificacion' => true
         ];
     }
+
+    /**
+     * Simula consulta al Registro Nacional de Vehículos
+     * Verifica encargos por robo y prohibiciones de salida
+     */
+    public function consultarRNV($patente) {
+        usleep(rand(100000, 400000)); // 100-400ms
+
+        $patente = strtoupper($patente);
+        $vehiculosConEncargo = ['AB1234', 'XY9999'];
+
+        if (in_array($patente, $vehiculosConEncargo)) {
+            return [
+                'aprobado' => false,
+                'codigo' => 'RNV_ENCARGO',
+                'observacion' => "Vehículo con encargo por robo o prohibición de salida ({$patente})",
+                'detalle' => 'Requiere verificación presencial en PDI'
+            ];
+        }
+
+        return [
+            'aprobado' => true,
+            'codigo' => 'RNV_OK',
+            'observacion' => 'Vehículo sin encargos ni prohibiciones',
+            'fecha_consulta' => date('Y-m-d H:i:s')
+        ];
+    }
 }

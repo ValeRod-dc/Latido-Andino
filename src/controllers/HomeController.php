@@ -10,9 +10,6 @@ class HomeController {
         require_once __DIR__ . '/../views/landing.php';
     }
     
-    // Los métodos terminos, privacidad, contacto, etc. se pueden mantener o eliminar
-    // Si no los usas, puedes borrarlos. Pero los dejamos por si acaso.
-    
     public function terminos() {
         require_once __DIR__ . '/../views/public/terminos.php';
     }
@@ -23,6 +20,14 @@ class HomeController {
     
     public function contacto() {
         require_once __DIR__ . '/../views/public/contacto.php';
+    }
+
+    public function accesibilidad() {
+        require_once __DIR__ . '/../views/public/accesibilidad.php';
+    }
+
+    public function ayuda() {
+        require_once __DIR__ . '/../views/public/ayuda.php';
     }
     
     public function procesarContacto() {

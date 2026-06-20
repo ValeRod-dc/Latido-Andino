@@ -1,6 +1,19 @@
 <?php
 session_start();
 
+// Mostrar errores como JSON en vez de HTML crudo (rompía el fetch del front)
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+set_exception_handler(function ($e) {
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => 'Error interno: ' . $e->getMessage()]);
+    exit;
+});
+set_error_handler(function ($severity, $message, $file, $line) {
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
+
 // Configuración
 define('MONGO_HOST', getenv('MONGO_HOST') ?: 'mongodb');
 define('MONGO_PORT', getenv('MONGO_PORT') ?: '27017');
@@ -32,11 +45,12 @@ $publicRoutes = [
     '', 'home', 
     'login', 'auth/login', 
     'register', 'auth/register',
-    'terminos', 'privacidad', 'contacto', 'contacto/enviar'
+    'terminos', 'privacidad', 'contacto', 'contacto/enviar', 'accesibilidad',
+    'pre-registro', 'api/tramite/procesar', 'consulta-estado', 'ayuda'
 ];
 
 // Verificar autenticación para rutas protegidas
-if (!in_array($uri, $publicRoutes) && empty($_SESSION['user_id'])) {
+if (!in_array($uri, $publicRoutes) && strpos($uri, 'tramite/pase-agil') !== 0 && empty($_SESSION['user_id'])) {    
     if (strpos($uri, 'api/') === 0) {
         http_response_code(401);
         echo json_encode(['error' => 'No autenticado']);
@@ -71,6 +85,10 @@ switch ($uri) {
     case 'contacto/enviar':
         $controller = new HomeController();
         $controller->procesarContacto();
+        break;
+    case 'accesibilidad':
+        $controller = new HomeController();
+        $controller->accesibilidad();
         break;
     
     // Autenticación
@@ -111,26 +129,61 @@ switch ($uri) {
     
     // Trámites (públicos o protegidos según corresponda)
     case 'pre-registro':
-        // Si quieres mantener la página de pre-registro
         $controller = new TramiteController();
         $controller->preRegistro();
+        break;
+    case 'api/tramite/procesar':
+        // El formulario de pre-registro.php hace fetch() a esta ruta
+        $controller = new TramiteController();
+        $controller->procesarPreRegistro();
         break;
     case 'consulta-estado':
         $controller = new TramiteController();
         $controller->consultarEstado();
         break;
-    case 'tramite/pase-agil':
-        // Manejo de parámetro
-        if (isset($_GET['id'])) {
-            $controller = new TramiteController();
-            $controller->mostrarPaseAgil($_GET['id']);
-        } else {
-            http_response_code(404);
-            echo "Página no encontrada";
-        }
+    
+    case 'ayuda':
+        $controller = new HomeController();
+        $controller->ayuda();
+        break;
+    case 'mi-pase-agil':
+        $controller = new TramiteController();
+        $controller->misPaseAgil();
+        break;
+
+    // Reportes
+    case 'reporte':
+        $controller = new ReporteController();
+        $controller->index();
+        break;
+    case 'reporte/generar':
+        $controller = new ReporteController();
+        $controller->generar();
+        break;
+
+    // Incidencias
+    case 'incidencia/registrar':
+        $controller = new IncidenciaController();
+        $controller->registrar();
+        break;
+
+    // Registro de flujo (se puede agregar a TramiteController)
+    case 'tramite/registrar-flujo':
+        $controller = new TramiteController();
+        $controller->registrarFlujo();
         break;
     
     default:
+        // Soporta /tramite/pase-agil/{id}, formato que usa el JS de pre-registro.php
+        if (strpos($uri, 'tramite/pase-agil') === 0) {
+            $partes = explode('/', $uri);
+            $id = $partes[2] ?? ($_GET['id'] ?? null);
+            if ($id) {
+                $controller = new TramiteController();
+                $controller->mostrarPaseAgil($id);
+                break;
+            }
+        }
         http_response_code(404);
         echo "Página no encontrada";
         break;

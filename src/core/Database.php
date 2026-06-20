@@ -48,16 +48,16 @@ class Database {
         return !empty($results) ? $results[0] : null;
     }
     
-    /* Inserta un documento */
+    /* Inserta un documento. Devuelve el _id insertado (MongoDB\BSON\ObjectId) o false si falla */
     public function insert($collection, $document) {
         $bulk = new MongoDB\Driver\BulkWrite;
-        $bulk->insert($document);
+        $insertedId = $bulk->insert($document); // genera y devuelve el _id si no se especificó uno
         
         $namespace = $this->db . '.' . $collection;
         
         try {
             $result = $this->manager->executeBulkWrite($namespace, $bulk);
-            return $result->getInsertedCount() > 0;
+            return $result->getInsertedCount() > 0 ? $insertedId : false;
         } catch (Exception $e) {
             error_log("Error en insert: " . $e->getMessage());
             return false;

@@ -75,4 +75,43 @@ class Tramite {
         }
         return $this->db->count('tramites', $filter);
     }
+
+    public function getEstadisticas($fechaInicio, $fechaFin, $pasoFronterizo = null) {
+        $match = [
+            'created_at' => [
+                '$gte' => new MongoDB\BSON\UTCDateTime($fechaInicio),
+                '$lte' => new MongoDB\BSON\UTCDateTime($fechaFin)
+            ]
+        ];
+        if ($pasoFronterizo) {
+            $match['paso_fronterizo'] = $pasoFronterizo;
+        }
+        $pipeline = [
+            ['$match' => $match],
+            ['$group' => [
+                '_id' => '$paso_fronterizo',
+                'total_tramites' => ['$sum' => 1],
+                'aprobados' => ['$sum' => ['$cond' => [['$eq' => ['$estado', 'aprobado']], 1, 0]]],
+                'rechazados' => ['$sum' => ['$cond' => [['$eq' => ['$estado', 'rechazado']], 1, 0]]],
+                'pendientes' => ['$sum' => ['$cond' => [['$eq' => ['$estado', 'pendiente']], 1, 0]]]
+            ]]
+        ];
+        return $this->db->aggregate('tramites', $pipeline);
+    }
+
+    public function registrarIncidencia($tramiteId, $tipo, $descripcion, $funcionarioId) {
+        $incidencia = [
+            'tramite_id' => $tramiteId,
+            'tipo' => $tipo,
+            'descripcion' => $descripcion,
+            'funcionario_id' => $funcionarioId,
+            'estado' => 'abierta',
+            'created_at' => new MongoDB\BSON\UTCDateTime()
+        ];
+        return $this->db->insert('incidencias', $incidencia);
+    }
+
+    public function actualizarFlujo($tramiteId, $datos) {
+        return $this->db->update('tramites', ['_id' => new MongoDB\BSON\ObjectId($tramiteId)], $datos);
+    }
 }

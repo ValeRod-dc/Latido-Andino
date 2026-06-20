@@ -14,6 +14,7 @@
   --gris-texto:  #4A5568;
   --gris-muted:  #718096;
   --verde:       #1B7A3C;
+  --verde-oscuro: #025b21;
   --amarillo:    #B8860B;
   --sombra:      0 2px 8px rgba(0,43,92,0.12);
   --radio:       6px;
@@ -175,6 +176,20 @@ body {
   line-height: 1.65;
 }
 .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn-reporte {
+  background: var(--verde);
+  color: #fff;
+  border: none;
+  padding: 13px 28px;
+  border-radius: var(--radio);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn-reporte:hover { background: var(--verde-oscuro); transform: translateY(-1px); }
 
 .btn-primario {
   background: var(--rojo);
