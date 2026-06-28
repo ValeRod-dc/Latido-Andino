@@ -5,7 +5,7 @@ echo ======================================
 echo.
 
 echo Deteniendo contenedores...
-docker-compose down
+docker-compose stop
 
 echo.
 echo Aplicacion detenida exitosamente
