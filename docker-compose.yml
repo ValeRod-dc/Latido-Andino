@@ -16,7 +16,7 @@ services:
       - latido_network
 
   mongodb:
-    image: mongo:7.0
+    image: mongo:6.0
     container_name: latido_andino_db
     ports:
       - "27017:27017"

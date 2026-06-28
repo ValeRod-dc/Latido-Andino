@@ -84,7 +84,7 @@ chmod +x start.sh
 ./start.sh
 ```
 
-#### Windows:
+#### Windows (CMD):
 ```bash
 start.bat
 ```

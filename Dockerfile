@@ -1,4 +1,8 @@
-FROM php:8.2-apache
+FROM php:8.2-apache-bookworm
+
+# Cambiar repositorios a HTTPS (más seguro y puede evitar algunos bloqueos)
+RUN sed -i 's/http:/https:/g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || true && \
+    sed -i 's/http:/https:/g' /etc/apt/sources.list 2>/dev/null || true
 
 # Instalar dependencias del sistema y extensiones PHP
 RUN apt-get update && apt-get install -y \
@@ -16,15 +20,13 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# Instalar Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 # Habilitar mod_rewrite
 RUN a2enmod rewrite
 
 # Copiar configuración de Apache
 COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
 
+# Establecer directorio de trabajo
 WORKDIR /var/www/html
 
 EXPOSE 80

@@ -6,11 +6,38 @@ echo.
 echo Levantando contenedores Docker...
 docker-compose up -d --build
 
-echo Esperando a que MongoDB este listo...
-timeout /t 10 /nobreak >nul
+echo Esperando a que MongoDB esté listo...
 
+set MAX_RETRIES=30
+set RETRY_COUNT=0
+set CONTAINER_NAME=latido_andino_db
+
+:loop
+set /a RETRY_COUNT+=1
+if %RETRY_COUNT% gtr %MAX_RETRIES% (
+    echo ❌ Error: MongoDB no esta listo despues de %MAX_RETRIES% intentos.
+    echo    Revisa los logs con: docker-compose logs mongodb
+    pause
+    exit /b 1
+)
+
+REM Verificar estado del contenedor
+for /f "usebackq tokens=*" %%i in (`docker inspect --format="{{.State.Status}}" %CONTAINER_NAME% 2^>nul`) do set STATUS=%%i
+if "%STATUS%"=="running" (
+    REM Intentar hacer ping a MongoDB
+    docker exec %CONTAINER_NAME% mongosh --eval "db.runCommand({ping: 1})" >nul 2>&1
+    if errorlevel 0 (
+        echo ✅ MongoDB esta listo.
+        goto :ready
+    )
+)
+echo    Esperando... (%RETRY_COUNT%/%MAX_RETRIES%)
+timeout /t 2 /nobreak >nul
+goto loop
+
+:ready
 echo Inicializando base de datos con datos de ejemplo...
-docker exec -i latido_andino_db mongosh < init-db.js
+docker exec -i %CONTAINER_NAME% mongosh < init-db.js
 
 echo.
 echo ✅ ¡Sistema listo!
