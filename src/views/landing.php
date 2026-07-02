@@ -32,7 +32,7 @@
     <div class="modal-body">
       <!-- PANEL LOGIN -->
       <div class="modal-panel activo" id="panel-login">
-        <div class="modal-aviso">🔒 Acceso seguro mediante cifrado AES-256. Sus datos están protegidos conforme a la Ley 19.628.</div>
+        <div class="modal-aviso">🔑 Acceso seguro mediante cifrado AES-256. Sus datos están protegidos conforme a la Ley 19.628.</div>
         <div class="modal-form-group">
           <label>Correo Electrónico</label>
           <div class="modal-input-icon">
@@ -43,7 +43,7 @@
         <div class="modal-form-group">
           <label>Contraseña</label>
           <div class="modal-input-icon">
-            <span class="icono-campo">🔑</span>
+            <span class="icono-campo">🔒</span>
             <input type="password" id="login-password" placeholder="Ingresa tu contraseña">
           </div>
         </div>
@@ -56,7 +56,7 @@
         <button class="btn-modal-submit" onclick="procesarLogin()">Ingresar al Portal</button>
         <div class="modal-divider">o continúa con</div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <button style="border:1px solid var(--gris-borde); background:#fff; border-radius:var(--radio); padding:10px; font-size:13px; font-weight:600; cursor:pointer;">🪪 ClaveÚnica</button>
+          <button style="border:1px solid var(--gris-borde); background:#fff; border-radius:var(--radio); padding:10px; font-size:13px; font-weight:600; cursor:pointer;">🆔 ClaveÚnica</button>
           <button style="border:1px solid var(--gris-borde); background:#fff; border-radius:var(--radio); padding:10px; font-size:13px; font-weight:600; cursor:pointer;">📱 Pasaporte Digital</button>
         </div>
         <a class="modal-link" onclick="switchModalTab('registro')">¿No tienes cuenta? Regístrate aquí →</a>
