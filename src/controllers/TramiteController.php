@@ -136,6 +136,28 @@ class TramiteController {
         require_once __DIR__ . '/../views/tramite/estado.php';
     }
 
+    public function tramitesPorRut() {
+        header('Content-Type: application/json');
+        $rut = $_GET['rut'] ?? '';
+
+        if (empty($rut)) {
+            echo json_encode(['success' => false, 'message' => 'RUT requerido']);
+            return;
+        }
+
+        $tramites = $this->tramiteModel->findByRut($rut);
+        echo json_encode([
+            'success' => true,
+            'tramites' => array_map(function($t) {
+                return [
+                    '_id' => (string)$t->_id,
+                    'tipo' => $t->tipo ?? 'ingreso',
+                    'estado' => $t->estado ?? 'pendiente'
+                ];
+            }, $tramites)
+        ]);
+    }
+
     /* Redirige al Pase Ágil del último trámite aprobado */
     public function misPaseAgil() {
         $rut = $_SESSION['user_rut'] ?? '';

@@ -23,12 +23,6 @@ $integraciones = [
     ['💼', 'SII',          'online', '0.7s'],
 ];
 
-$incidencias = [
-    ['#INC-001', 'Juan Pérez',    'badge-rojo',    'Crítica', 'Documento vencido — pasaporte exp. 2023',  '09:15', 'badge-amarillo', 'En revisión'],
-    ['#INC-002', 'María López',   'badge-amarillo', 'Aviso',  'Discrepancia de datos con Registro Civil', '09:38', 'badge-verde',   'Resuelta'],
-    ['#INC-003', 'Carlos Muñoz',  'badge-rojo',    'Crítica', 'Alerta Interpol activa',                   '10:02', 'badge-rojo',    'Escalada'],
-];
-
 $flujoTipos = [
     ['Turistas',      'azul',    78],
     ['Transporte',    'rojo',    12],
@@ -85,7 +79,7 @@ $alertas = [
 
     <!-- Estadísticas rápidas -->
     <div class="dashboard-grid">
-      <div class="dash-card"><div class="dash-num">342</div><div class="dash-label">Trámites Pendientes</div></div>
+      <div class="dash-card"><div class="dash-num">0</div><div class="dash-label">Trámites Pendientes</div></div>
       <div class="dash-card"><div class="dash-num verde">289</div><div class="dash-label">Aprobados Hoy</div></div>
       <div class="dash-card"><div class="dash-num rojo">14</div><div class="dash-label">Con Incidencia</div></div>
       <div class="dash-card"><div class="dash-num amarillo">39</div><div class="dash-label">En Revisión Manual</div></div>
@@ -256,31 +250,70 @@ $alertas = [
 
   </div><!-- /tab-monitor -->
 
-  <!-- ========================================================== -->
-  <!-- ===== TAB: INCIDENCIAS ===== -->
-  <!-- ========================================================== -->
-  <div class="tab-section" id="tab-incidencias" style="display:none;">
+<!-- ========================================================== -->
+<!-- ===== TAB: INCIDENCIAS (DINÁMICO CON NOMBRE REAL) ===== -->
+<!-- ========================================================== -->
+<div class="tab-section" id="tab-incidencias" style="display:none;">
     <div class="tabla-tramites">
-      <div class="tabla-header"><h3>Registro de Incidencias</h3></div>
-      <table>
-        <thead>
-          <tr><th>ID</th><th>Viajero</th><th>Severidad</th><th>Descripción</th><th>Hora</th><th>Estado</th></tr>
-        </thead>
-        <tbody>
-          <?php foreach ($incidencias as [$id, $viajero, $badgeSev, $sev, $desc, $hora, $badgeEst, $est]): ?>
-          <tr>
-            <td><strong><?= $id ?></strong></td>
-            <td><?= $viajero ?></td>
-            <td><span class="badge <?= $badgeSev ?>"><?= $sev ?></span></td>
-            <td><?= $desc ?></td>
-            <td><?= $hora ?></td>
-            <td><span class="badge <?= $badgeEst ?>"><?= $est ?></span></td>
-          </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+        <div class="tabla-header"><h3>Registro de Incidencias</h3></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Viajero</th>
+                    <th>Severidad</th>
+                    <th>Descripción</th>
+                    <th>Hora</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($incidencias)): ?>
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:30px; color:var(--gris-muted);">
+                            No hay incidencias registradas
+                        </td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($incidencias as $inc): ?>
+                        <tr>
+                            <td><strong><?= htmlspecialchars($inc->codigo ?? '#INC-' . substr((string)$inc->_id, -4)) ?></strong></td>
+                            <td><?= htmlspecialchars($inc->viajero_nombre ?? 'Desconocido') ?></td>
+                            <td>
+                                <span class="badge <?= match($inc->tipo ?? '') {
+                                    'documentacion_invalida' => 'badge-rojo',
+                                    'alerta_sanitaria'       => 'badge-rojo',
+                                    'inconsistencia'         => 'badge-amarillo',
+                                    default                  => 'badge-gris'
+                                } ?>">
+                                    <?= match($inc->tipo ?? '') {
+                                        'documentacion_invalida' => 'Crítica',
+                                        'alerta_sanitaria'       => 'Crítica',
+                                        'inconsistencia'         => 'Aviso',
+                                        default                  => 'Información'
+                                    } ?>
+                                </span>
+                            </td>
+                            <td><?= htmlspecialchars($inc->descripcion ?? 'Sin descripción') ?></td>
+                            <td><?= isset($inc->created_at) ? date('H:i', $inc->created_at->toDateTime()->getTimestamp()) : 'N/A' ?></td>
+                            <td>
+                                <span class="badge <?= match($inc->estado ?? 'abierta') {
+                                    'abierta'   => 'badge-amarillo',
+                                    'resuelta'  => 'badge-verde',
+                                    'escalada'  => 'badge-rojo',
+                                    default     => 'badge-gris'
+                                } ?>">
+                                    <?= ucfirst($inc->estado ?? 'Abierta') ?>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
-  </div><!-- /tab-incidencias -->
+</div><!-- /tab-incidencias -->
+
 
   <!-- ========================================================== -->
   <!-- ===== TAB: REPORTES ===== -->
@@ -299,43 +332,62 @@ $alertas = [
 
 </main>
 
-<!-- ========================================================== -->
-<!-- ===== MODAL PARA REGISTRAR INCIDENCIA (RF-09) ===== -->
-<!-- ========================================================== -->
-<div id="modalIncidencia" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:999; backdrop-filter:blur(3px);">
-  <div style="background:#fff; padding:30px; border-radius:12px; max-width:520px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:modalEntrada 0.25s ease;">
-    <h3 style="color:var(--azul); margin-bottom:20px;">⚠️ Registrar Incidencia</h3>
-    <form id="formIncidencia">
-      <div class="form-group">
-        <label>Trámite asociado</label>
-        <select name="tramite_id" id="incidencia_tramite_id" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:var(--radio);">
-          <option value="">Seleccione un trámite...</option>
-          <?php foreach ($tramitesPendientes as $t): ?>
-            <option value="<?= htmlspecialchars((string)$t->_id) ?>">
-              #<?= substr((string)$t->_id, -6) ?> — <?= htmlspecialchars($t->viajero_nombre) ?> (<?= htmlspecialchars($t->viajero_rut) ?>)
-            </option>
-          <?php endforeach; ?>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Tipo de incidencia</label>
-        <select name="tipo" required>
-          <option value="documentacion_invalida">📄 Documentación inválida</option>
-          <option value="alerta_sanitaria">⚠️ Alerta sanitaria</option>
-          <option value="inconsistencia">📊 Inconsistencia en datos</option>
-          <option value="otro">🔹 Otro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Descripción detallada</label>
-        <textarea name="descripcion" rows="4" placeholder="Describa la anomalía o situación..." required></textarea>
-      </div>
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button type="submit" class="btn-primario" style="border:none; cursor:pointer;">✅ Registrar Incidencia</button>
-        <button type="button" onclick="cerrarModalIncidencia()" style="background:#ccc; border:none; padding:10px 20px; border-radius:var(--radio); font-weight:600; cursor:pointer;">Cancelar</button>
-      </div>
-    </form>
-  </div>
+<!-- ===== MODAL PARA REGISTRAR INCIDENCIA (MEJORADO) ===== -->
+<div id="modalIncidencia" class="modal-incidencia-overlay">
+    <div class="modal-incidencia-box">
+        <div class="modal-incidencia-header">
+            <h3><i class="bi bi-exclamation-triangle-fill" style="color:var(--rojo);"></i> Registrar Incidencia</h3>
+        </div>
+        <div class="modal-incidencia-body">
+            <form id="formIncidencia">
+                <!-- Tipo de incidencia (obligatorio) -->
+                <div class="form-group">
+                    <label>Tipo de incidencia <span style="color:red;">*</span></label>
+                    <select name="tipo" required>
+                        <option value="">Seleccione un tipo...</option>
+                        <option value="documentacion_invalida">📄 Documentación inválida</option>
+                        <option value="alerta_sanitaria">⚠️ Alerta sanitaria</option>
+                        <option value="inconsistencia">📊 Inconsistencia en datos</option>
+                        <option value="otro">🔹 Otro</option>
+                    </select>
+                </div>
+
+                <!-- RUT del viajero (obligatorio) -->
+                <div class="form-group">
+                    <label>RUT / Pasaporte del viajero <span style="color:red;">*</span></label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" name="rut" id="incidencia_rut" placeholder="12.345.678-9" style="flex:1;" required>
+                        <button type="button" class="btn-incidencia-submit" style="background:var(--azul); padding:8px 16px;" onclick="buscarTramitesPorRut()">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                    </div>
+                    <small style="color:var(--gris-muted);">Ingrese el RUT del viajero para buscar sus trámites</small>
+                </div>
+
+                <!-- Trámite asociado (opcional) - se llena con AJAX -->
+                <div class="form-group">
+                    <label>Trámite asociado (opcional)</label>
+                    <select name="tramite_id" id="incidencia_tramite_select">
+                        <option value="">Sin trámite asociado</option>
+                        <!-- Se llenará dinámicamente con AJAX -->
+                    </select>
+                    <small style="color:var(--gris-muted);">Seleccione un trámite del viajero o déjelo vacío</small>
+                </div>
+
+                <!-- Descripción detallada (obligatorio) -->
+                <div class="form-group">
+                    <label>Descripción detallada <span style="color:red;">*</span></label>
+                    <textarea name="descripcion" rows="4" placeholder="Describa la anomalía o situación..." required></textarea>
+                </div>
+
+                <!-- Acciones -->
+                <div class="modal-incidencia-actions">
+                    <button type="submit" class="btn-incidencia-submit"><i class="bi bi-check-circle"></i> Registrar Incidencia</button>
+                    <button type="button" class="btn-incidencia-cancel" onclick="cerrarModalIncidencia()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!-- ========================================================== -->
@@ -352,56 +404,71 @@ function cambiarTab(id, btn) {
 
 // ===== MODAL DE INCIDENCIAS =====
 function abrirModalIncidencia() {
-  document.getElementById('modalIncidencia').style.display = 'flex';
+    document.getElementById('modalIncidencia').style.display = 'flex';
+    document.getElementById('formIncidencia').reset();
+    document.getElementById('rutBusquedaMsg').textContent = '';
 }
 function cerrarModalIncidencia() {
-  document.getElementById('modalIncidencia').style.display = 'none';
+    document.getElementById('modalIncidencia').style.display = 'none';
+}
+
+// ===== BUSCAR TRÁMITES POR RUT (AJAX) =====
+async function buscarTramitesPorRut() {
+    const rut = document.getElementById('incidencia_rut').value.trim();
+    if (!rut) {
+        alert('⚠️ Ingrese un RUT válido');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/tramites-por-rut?rut=' + encodeURIComponent(rut));
+        const data = await response.json();
+
+        const select = document.getElementById('incidencia_tramite_select');
+        select.innerHTML = '<option value="">Sin trámite asociado</option>'; // Resetear
+
+        if (data.success && data.tramites.length > 0) {
+            data.tramites.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t._id;
+                opt.textContent = '# ' + t._id.substring(0,6) + ' — ' + t.tipo + ' (' + t.estado + ')';
+                select.appendChild(opt);
+            });
+        } else {
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = '⚠️ Sin trámites registrados para este RUT';
+            select.appendChild(opt);
+        }
+    } catch (error) {
+        alert('❌ Error al buscar trámites');
+    }
 }
 
 document.getElementById('formIncidencia').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const formData = new FormData(this);
-  const submitBtn = this.querySelector('button[type="submit"]');
-  const originalText = submitBtn.textContent;
-  submitBtn.textContent = '⏳ Enviando...';
-  submitBtn.disabled = true;
+    e.preventDefault();
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = '⏳ Enviando...';
+    submitBtn.disabled = true;
 
-  try {
-    const response = await fetch('/incidencia/registrar', { method: 'POST', body: formData });
-    const data = await response.json();
+    try {
+        const response = await fetch('/incidencia/registrar', { method: 'POST', body: formData });
+        const data = await response.json();
 
-    if (data.success) {
-      alert('Incidencia ' + data.codigo + ' registrada correctamente');
-
-      // Agregar fila a la tabla de incidencias sin recargar la página
-      const select = document.getElementById('incidencia_tramite_id');
-      const viajero = select.options[select.selectedIndex].text.split('—')[1]?.split('(')[0]?.trim() || '—';
-      const tipoTexto = this.querySelector('select[name="tipo"]').selectedOptions[0].text;
-      const hora = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
-
-      const tbody = document.querySelector('#tab-incidencias tbody');
-      const fila = document.createElement('tr');
-      fila.innerHTML = `
-        <td><strong>${data.codigo}</strong></td>
-        <td>${viajero}</td>
-        <td><span class="badge badge-amarillo">Aviso</span></td>
-        <td>${tipoTexto}</td>
-        <td>${hora}</td>
-        <td><span class="badge badge-amarillo">En revisión</span></td>
-      `;
-      tbody.prepend(fila);
-
-      this.reset();
-      cerrarModalIncidencia();
-    } else {
-      alert('❌ Error: ' + (data.message || ''));
+        if (data.success) {
+            alert('✅ Incidencia ' + data.codigo + ' registrada correctamente');
+            location.reload(); // Recargar para ver la nueva incidencia en la tabla
+        } else {
+            alert('❌ Error: ' + (data.message || ''));
+        }
+    } catch (error) {
+        alert('❌ Error de conexión al servidor');
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
     }
-  } catch (error) {
-    alert('❌ Error de conexión al servidor');
-  } finally {
-    submitBtn.textContent = originalText;
-    submitBtn.disabled = false;
-  }
 });
 
 // ===== REGISTRO DE FLUJO (RF-06) =====

@@ -142,6 +142,22 @@ switch ($uri) {
         $controller = new TramiteController();
         $controller->procesarPreRegistro();
         break;
+    case '/tramite/buscar-por-rut':
+        header('Content-Type: application/json');
+        $rut      = $_GET['rut'] ?? '';
+        $tramites = (new Tramite())->findByRut($rut);
+        $resultado = array_map(fn($t) => [
+            'id'     => (string)$t->_id,
+            'nombre' => $t->viajero_nombre ?? '',
+            'estado' => $t->estado ?? '',
+        ], $tramites);
+        echo json_encode(['tramites' => $resultado]);
+        break;
+
+    case 'api/tramites-por-rut':
+        $controller = new TramiteController();
+        $controller->tramitesPorRut();
+        break;
     case 'consulta-estado':
         $controller = new TramiteController();
         $controller->consultarEstado();

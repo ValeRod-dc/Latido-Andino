@@ -99,12 +99,13 @@ class Tramite {
         return $this->db->aggregate('tramites', $pipeline);
     }
 
-    public function registrarIncidencia($tramiteId, $tipo, $descripcion, $funcionarioId) {
+    public function registrarIncidencia($tramiteId, $tipo, $descripcion, $funcionarioId, $viajeroRut = null) {
         $codigo = $this->siguienteCodigoIncidencia();
 
         $incidencia = [
             'codigo' => $codigo,
-            'tramite_id' => $tramiteId,
+            'tramite_id' => $tramiteId,               // puede ser null
+            'viajero_rut' => $viajeroRut,             // NUEVO: guardamos el RUT del viajero
             'tipo' => $tipo,
             'descripcion' => $descripcion,
             'funcionario_id' => $funcionarioId,
@@ -113,7 +114,6 @@ class Tramite {
         ];
 
         $id = $this->db->insert('incidencias', $incidencia);
-
         return $id ? $codigo : false;
     }
 
@@ -128,5 +128,34 @@ class Tramite {
 
     public function findByQR($codigo) {
         return $this->db->findOne('tramites', ['pase_agil_qr' => $codigo]);
+    }
+
+    public function tramitesPorRut() {
+        header('Content-Type: application/json');
+        $rut = $_GET['rut'] ?? '';
+
+        if (empty($rut)) {
+            echo json_encode(['success' => false, 'message' => 'RUT requerido']);
+            return;
+        }
+
+        $tramites = $this->tramiteModel->findByRut($rut);
+        echo json_encode([
+            'success' => true,
+            'tramites' => array_map(function($t) {
+                return [
+                    '_id' => (string)$t->_id,
+                    'tipo' => $t->tipo ?? 'ingreso',
+                    'estado' => $t->estado ?? 'pendiente'
+                ];
+            }, $tramites)
+        ]);
+    }
+
+    public function listarIncidencias($limit = 50) {
+        return $this->db->find('incidencias', [], [
+            'sort' => ['created_at' => -1],
+            'limit' => $limit
+        ]);
     }
 }
