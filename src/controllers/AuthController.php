@@ -47,6 +47,7 @@ class AuthController {
         $_SESSION['user_email'] = $user->email;
         $_SESSION['user_role'] = $user->role;
         $_SESSION['user_rut'] = $user->rut ?? '';
+        $_SESSION['user_nombre']= $user->name;
         
         // Cookie persistente
         $cookie_value = base64_encode(json_encode([

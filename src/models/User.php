@@ -8,7 +8,13 @@ class User {
     }
     
     public function findByEmail($email) {
-        return $this->db->findOne('usuarios', ['email' => $email]);
+        return $this->db->findOne('usuarios', [
+            'email' => $email,
+            '$or' => [
+                ['activo' => true],
+                ['activo' => ['$exists' => false]]  // compatibilidad usuarios sin el campo
+            ]
+        ]);
     }
     
     public function verifyPassword($password, $hash) {
@@ -23,6 +29,7 @@ class User {
             'role' => $data['role'] ?? 'viajero',
             'rut' => $data['rut'] ?? null,
             'nacionalidad' => $data['nacionalidad'] ?? 'Chilena',
+            'activo' => true,
             'created_at' => new MongoDB\BSON\UTCDateTime()
         ];
         return $this->db->insert('usuarios', $user);

@@ -14,16 +14,21 @@ class PortalController {
             header('Location: /login');
             exit;
         }
-        // Obtener estadísticas y último trámite del viajero
-        $rut = $_SESSION['user_rut'] ?? '';
-        $ultimosTramites = $this->tramiteModel->findByRut($rut);
-        $ultimoTramite = !empty($ultimosTramites) ? $ultimosTramites[0] : null;
-        $qrData = ($ultimoTramite && $ultimoTramite->estado === 'aprobado' && !empty($ultimoTramite->pase_agil_qr)) ? $ultimoTramite->pase_agil_qr : null;
+
+        $rut            = $_SESSION['user_rut'] ?? '';
+        $ultimosTramites= !empty($rut)
+                        ? $this->tramiteModel->findByRut($rut)
+                        : [];                                   // ← evita query con RUT vacío
+        $ultimoTramite  = !empty($ultimosTramites) ? $ultimosTramites[0] : null;
+        $qrData         = ($ultimoTramite
+                        && ($ultimoTramite->estado ?? '') === 'aprobado'
+                        && !empty($ultimoTramite->pase_agil_qr))
+                        ? $ultimoTramite->pase_agil_qr : null;
 
         $stats = [
-            'tramites_hoy' => $this->tramiteModel->contarPorEstado('aprobado', true), // se necesita implementar
-            'tiempo_promedio' => 18,
-            'aprobados_online' => 94.2,
+            'tramites_hoy'        => $this->tramiteModel->contarPorEstado('aprobado', true),
+            'tiempo_promedio'     => 18,
+            'aprobados_online'    => 94.2,
             'sistemas_integrados' => 7
         ];
 

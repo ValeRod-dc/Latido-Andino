@@ -2,7 +2,7 @@
 session_start();
 
 // Mostrar errores como JSON en vez de HTML crudo (rompía el fetch del front)
-ini_set('display_errors', '0');
+ini_set('display_errors', '1');
 error_reporting(E_ALL);
 set_exception_handler(function ($e) {
     http_response_code(500);

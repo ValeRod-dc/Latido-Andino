@@ -7,8 +7,9 @@ class IntegracionMockService {
      * Verifica arraigos, órdenes de detención, etc.
      */
     public function consultarPDI($rut) {
-        // Simular tiempos de respuesta
-        usleep(rand(100000, 500000)); // 100-500ms
+        usleep(rand(100000, 500000));
+
+        $rut = strtolower(str_replace(['.', ' '], '', trim($rut)));
         
         // Lista negra simulada
         $blacklist = ['11111111-1', '22222222-2'];
@@ -93,6 +94,8 @@ class IntegracionMockService {
     /* Simula consulta a Interpol */
     public function consultarInterpol($rut) {
         usleep(rand(200000, 800000)); // 200-800ms
+
+        $rut = strtolower(str_replace(['.', ' '], '', trim($rut)));
         
         // Simular documentos robados
         $documentosRobados = ['33333333-3', '44444444-4'];
@@ -117,6 +120,9 @@ class IntegracionMockService {
     public function consultarRegistroCivil($rut) {
         usleep(rand(50000, 200000)); // 50-200ms
         
+        $rut = strtolower(str_replace(['.', ' '], '', trim($rut)));
+
+
         $personas = [
             '12345678-9' => ['nombre' => 'Juan Pérez', 'fecha_nacimiento' => '1990-01-15', 'vigente' => true],
             '87654321-k' => ['nombre' => 'María González', 'fecha_nacimiento' => '1985-05-20', 'vigente' => true]

@@ -37,9 +37,9 @@
         <span class="subtitulo">Servicio Nacional de Aduanas · Paso Los Libertadores</span>
         </div>
         <nav class="header-nav">
-        <a href="/login" class="btn-home" style="text-decoration:none;">
-            <i class="bi bi-house-fill"></i> Página Principal
-        </a>
+            <a href="/login" class="btn-home" style="text-decoration:none;">
+                <i class="bi bi-house-fill"></i> Página Principal
+            </a>
         </nav>
     </div>
     </header>
