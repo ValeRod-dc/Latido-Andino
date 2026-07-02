@@ -113,6 +113,11 @@ switch ($uri) {
         $controller->processRegister();
         break;
     
+    case 'verificar':
+        $controller = new VerificarController();
+        $controller->index();
+        break;
+    
     // Portal por rol
     case 'portal/viajero':
         $controller = new PortalController();

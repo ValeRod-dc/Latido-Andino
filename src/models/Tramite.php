@@ -125,4 +125,8 @@ class Tramite {
     public function actualizarFlujo($tramiteId, $datos) {
         return $this->db->update('tramites', ['_id' => new MongoDB\BSON\ObjectId($tramiteId)], $datos);
     }
+
+    public function findByQR($codigo) {
+        return $this->db->findOne('tramites', ['pase_agil_qr' => $codigo]);
+    }
 }

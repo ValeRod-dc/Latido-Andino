@@ -18,7 +18,7 @@ class PortalController {
         $rut = $_SESSION['user_rut'] ?? '';
         $ultimosTramites = $this->tramiteModel->findByRut($rut);
         $ultimoTramite = !empty($ultimosTramites) ? $ultimosTramites[0] : null;
-        $qrData = $ultimoTramite && $ultimoTramite->estado === 'aprobado' ? $ultimoTramite->pase_agil_qr : null;
+        $qrData = ($ultimoTramite && $ultimoTramite->estado === 'aprobado' && !empty($ultimoTramite->pase_agil_qr)) ? $ultimoTramite->pase_agil_qr : null;
 
         $stats = [
             'tramites_hoy' => $this->tramiteModel->contarPorEstado('aprobado', true), // se necesita implementar

@@ -186,46 +186,93 @@ class TramiteController {
     }
 
     public function registrarFlujo() {
-    header('Content-Type: application/json');
+        header('Content-Type: application/json');
 
-    if (!in_array($_SESSION['user_role'], ['aduanas', 'sag', 'pdi', 'admin'])) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'No autorizado']);
-        return;
-    }
-
-    $tramiteId = $_POST['tramite_id'] ?? '';
-    $tipo = $_POST['tipo'] ?? 'ingreso'; // ingreso o egreso
-
-    if (!$tramiteId) {
-        echo json_encode(['success' => false, 'message' => 'ID de trámite requerido']);
-        return;
-    }
-
-    $tramite = $this->tramiteModel->findById($tramiteId);
-    if (!$tramite) {
-        echo json_encode(['success' => false, 'message' => 'Trámite no encontrado']);
-        return;
-    }
-
-    $actualizacion = [];
-    if ($tipo === 'ingreso') {
-        $actualizacion['hora_ingreso'] = new MongoDB\BSON\UTCDateTime();
-    } elseif ($tipo === 'egreso') {
-        $actualizacion['hora_egreso'] = new MongoDB\BSON\UTCDateTime();
-        // Calcular tiempo de espera si existe ingreso
-        if (isset($tramite->hora_ingreso)) {
-            $ingreso = $tramite->hora_ingreso->toDateTime();
-            $egreso = new DateTime();
-            $tiempo = $egreso->getTimestamp() - $ingreso->getTimestamp();
-            $actualizacion['tiempo_espera_segundos'] = $tiempo;
+        if (!in_array($_SESSION['user_role'], ['aduanas', 'sag', 'pdi', 'admin'])) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'No autorizado']);
+            return;
         }
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Tipo inválido']);
-        return;
+
+        $tramiteId = $_POST['tramite_id'] ?? '';
+        $tipo = $_POST['tipo'] ?? 'ingreso'; // ingreso o egreso
+
+        if (!$tramiteId) {
+            echo json_encode(['success' => false, 'message' => 'ID de trámite requerido']);
+            return;
+        }
+
+        $tramite = $this->tramiteModel->findById($tramiteId);
+        if (!$tramite) {
+            echo json_encode(['success' => false, 'message' => 'Trámite no encontrado']);
+            return;
+        }
+
+        $actualizacion = [];
+        if ($tipo === 'ingreso') {
+            $actualizacion['hora_ingreso'] = new MongoDB\BSON\UTCDateTime();
+        } elseif ($tipo === 'egreso') {
+            $actualizacion['hora_egreso'] = new MongoDB\BSON\UTCDateTime();
+            // Calcular tiempo de espera si existe ingreso
+            if (isset($tramite->hora_ingreso)) {
+                $ingreso = $tramite->hora_ingreso->toDateTime();
+                $egreso = new DateTime();
+                $tiempo = $egreso->getTimestamp() - $ingreso->getTimestamp();
+                $actualizacion['tiempo_espera_segundos'] = $tiempo;
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Tipo inválido']);
+            return;
+        }
+
+        $resultado = $this->tramiteModel->actualizarFlujo($tramiteId, $actualizacion);
+        echo json_encode(['success' => $resultado]);
     }
 
-    $resultado = $this->tramiteModel->actualizarFlujo($tramiteId, $actualizacion);
-    echo json_encode(['success' => $resultado]);
-}
+    public function cambiarEstado() {
+        header('Content-Type: application/json');
+
+        if (!in_array($_SESSION['user_role'], ['admin', 'aduanas', 'sag', 'pdi'])) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'No autorizado']);
+            return;
+        }
+
+        $tramiteId = $_POST['tramite_id'] ?? '';
+        $nuevoEstado = $_POST['estado'] ?? '';
+
+        if (!in_array($nuevoEstado, ['aprobado', 'rechazado'])) {
+            echo json_encode(['success' => false, 'message' => 'Estado inválido']);
+            return;
+        }
+
+        $tramite = $this->tramiteModel->findById($tramiteId);
+        if (!$tramite) {
+            echo json_encode(['success' => false, 'message' => 'Trámite no encontrado']);
+            return;
+        }
+
+        $resultado = $this->tramiteModel->cambiarEstado($tramiteId, $nuevoEstado);
+        echo json_encode(['success' => $resultado]);
+    }
+
+    // MODIFICAR mostrarPaseAgil() para generar QR con URL de verificación
+    public function mostrarPaseAgil($tramiteId) {
+        $tramite = $this->tramiteModel->findById($tramiteId);
+
+        if (!$tramite || $tramite->estado !== 'aprobado') {
+            header('Location: /consulta-estado');
+            exit;
+        }
+
+        // Construir URL de verificación
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+        $host = $_SERVER['HTTP_HOST'];
+        $urlVerificacion = $protocol . $host . '/verificar?codigo=' . urlencode($tramite->pase_agil_qr);
+
+        // Generar QR con la URL completa
+        $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($urlVerificacion);
+
+        require_once __DIR__ . '/../views/tramite/pase-agil.php';
+    }
 }

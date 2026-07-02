@@ -23,8 +23,17 @@ $qrData = $qrData ?? null;
     <div class="hero-card">
       <h3>Pase Ágil QR</h3>
       <div class="qr-mockup">
-        <div class="qr-grid" id="qrGrid"></div>
-        <p class="qr-label">Escanear al llegar a frontera</p>
+          <?php if ($qrData): 
+              $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+              $host = $_SERVER['HTTP_HOST'];
+              $urlVerificacion = $protocol . $host . '/verificar?codigo=' . urlencode($qrData);
+              $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($urlVerificacion);
+          ?>
+              <img src="<?= $qrUrl ?>" alt="Código QR Pase Ágil" style="width:150px; height:150px; margin:0 auto; display:block;">
+              <p class="qr-label">Escanear al llegar a frontera</p>
+          <?php else: ?>
+              <div style="padding:20px; color:#999;">No hay Pase Ágil activo</div>
+          <?php endif; ?>
       </div>
       <div class="pase-info">
         <strong><?= htmlspecialchars($_SESSION['user_name'] ?? 'Usuario') ?></strong><br>
@@ -102,11 +111,3 @@ $qrData = $qrData ?? null;
   </div>
 </main>
 
-<script>
-  // Generar QR simulado
-  const qrPattern = [1,1,1,0,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1,1,0,1,0,1,0,0,1,1,1,1,0,1,1,1,0,0,1,1,0,1,0,1,0,0,1,1,1,1];
-  const qrContainer = document.getElementById('qrGrid');
-  if (qrContainer) {
-    qrPattern.forEach(v => { let c = document.createElement('div'); c.className = 'qr-cell ' + (v ? 'qr-dark' : 'qr-light'); qrContainer.appendChild(c); });
-  }
-</script>

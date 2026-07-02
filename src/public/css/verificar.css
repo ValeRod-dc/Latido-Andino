@@ -1,0 +1,107 @@
+/* ============================================
+   Latido Andino - Verificar Pase Ágil (verificar.css)
+   ============================================ */
+
+.verificar-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f4f8;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.verificar-card {
+    max-width: 480px;
+    width: 100%;
+    background: #fff;
+    border-radius: var(--radius-xl, 20px);
+    box-shadow: 0 10px 40px rgba(0, 43, 92, 0.15);
+    overflow: hidden;
+    text-align: center;
+}
+
+.verificar-card .card-header {
+    background: linear-gradient(135deg, #002B5C 0%, #1565C0 100%);
+    color: #fff;
+    padding: 30px 20px 20px;
+}
+
+.verificar-card .card-header .escudo {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.verificar-card .card-header h2 {
+    font-family: 'Roboto Slab', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.verificar-card .card-header p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin: 4px 0 0;
+    letter-spacing: 0.04em;
+}
+
+.verificar-card .card-body {
+    padding: 30px 24px;
+}
+
+.badge-aprobado {
+    background: var(--sna-green, #28a745);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 6px 20px;
+    border-radius: 30px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.badge-aprobado i {
+    margin-right: 6px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item strong {
+    color: var(--sna-blue, #002B5C);
+}
+
+.info-item span {
+    color: #1A202C;
+}
+
+.btn-volver {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--sna-blue, #1565C0);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-volver:hover {
+    text-decoration: underline;
+}
+
+.verificar-card .card-footer {
+    background: #f8f9fa;
+    padding: 12px;
+    font-size: 0.75rem;
+    color: #6c757d;
+    border-top: 1px solid #eee;
+}
