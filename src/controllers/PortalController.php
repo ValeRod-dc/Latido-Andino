@@ -49,18 +49,13 @@ class PortalController {
         foreach ($incidencias as $inc) {
             if (!empty($inc->viajero_rut)) {
                 $usuario = $this->userModel->findByRut($inc->viajero_rut);
-                $inc->viajero_nombre = $usuario ? $usuario->name : 'Usuario no encontrado';
+                $inc->viajero_nombre = $usuario ? $usuario->name : 'Usuario no encontrado (RUT: ' . $inc->viajero_rut . ')';
             } else {
                 $inc->viajero_nombre = 'Sin RUT';
             }
         }
 
         require_once __DIR__ . '/../views/portal/base.php';
-    }
-
-    // Método auxiliar para normalizar RUT
-    private function normalizarRut($rut) {
-        return strtolower(str_replace(['.', '-', ' '], '', trim($rut)));
     }
 
     public function admin() {
@@ -81,7 +76,6 @@ class PortalController {
             $db->insert('bitacora', ['hora' => '08:55', 'accion' => 'ALERTA', 'usuario' => 'SISTEMA', 'detalle' => 'API Interpol sin respuesta 2 min.', 'tipo' => 'error', 'created_at' => new MongoDB\BSON\UTCDateTime()]);
         }
 
-        // Obtener bitácora real desde la BD
         $bitacora = $db->find('bitacora', [], ['sort' => ['created_at' => -1], 'limit' => 50]);
 
         require_once __DIR__ . '/../views/portal/base.php';

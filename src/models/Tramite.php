@@ -118,8 +118,11 @@ class Tramite {
     }
 
     private function siguienteCodigoIncidencia() {
-        $total = count($this->db->find('incidencias', []));
-        return '#INC-' . str_pad((string)($total + 1), 3, '0', STR_PAD_LEFT);
+        // Contar todas las incidencias
+        $total = $this->db->count('incidencias');
+        // Si no hay incidencias, empezar desde 1
+        $siguiente = $total + 1;
+        return '#INC-' . str_pad((string)$siguiente, 3, '0', STR_PAD_LEFT);
     }
 
     public function actualizarFlujo($tramiteId, $datos) {
@@ -157,5 +160,9 @@ class Tramite {
             'sort' => ['created_at' => -1],
             'limit' => $limit
         ]);
+    }
+
+    private function generarCodigoIncidencia() {
+        return '#INC-' . strtoupper(uniqid());
     }
 }
