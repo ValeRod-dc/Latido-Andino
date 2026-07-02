@@ -47,10 +47,6 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
 
-                <a href="/pre-registro" class="btn btn-link mb-3 ps-0">
-                    <i class="bi bi-arrow-left"></i> Volver
-                </a>
-
                 <div class="form-card mb-4">
                     <div class="form-card-header">
                         <h4 class="mb-1"><i class="bi bi-clipboard-check"></i> Estado de tu trámite</h4>
@@ -92,11 +88,14 @@
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
-
                     </div>
                 </div>
-
             </div>
+
+            <a href="/portal/viajero" class="btn btn-link mb-3 ps-0">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+
         </div>
     </div>
 </body>

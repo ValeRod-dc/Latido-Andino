@@ -167,7 +167,9 @@ body {
   line-height: 1.2;
   margin-bottom: 16px;
 }
-.hero h1 span { color: #FFD700; }
+.hero h1 span { 
+  color: #FFD700; 
+}
 .hero p {
   font-size: 16px;
   color: rgba(255,255,255,0.85);
@@ -220,11 +222,14 @@ body {
 .btn-secundario:hover { background: rgba(255,255,255,0.22); }
 
 .hero-card {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 12px;
-  padding: 28px;
+  padding: 20px 24px;           /* Reducir padding */
   backdrop-filter: blur(4px);
+  min-width: 0;                 /* Evita que crezca innecesariamente */
+  max-width: 320px;             /* Limitar ancho máximo */
+  margin: 0 auto;               /* Centrar si es necesario */
 }
 .hero-card h3 {
   font-size: 13px;
@@ -236,9 +241,11 @@ body {
 .qr-mockup {
   background: #fff;
   border-radius: 8px;
-  padding: 16px;
+  padding: 8px;
   text-align: center;
-  margin-bottom: 16px;
+  display: inline-block;
+  margin: 0 auto 16px; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
 }
 .qr-grid {
   display: grid;

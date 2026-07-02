@@ -33,8 +33,8 @@ $qrData = $qrData ?? null;
                 $urlVerificacion = $protocol . $host . '/verificar?codigo=' . urlencode($qrData);
               $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($urlVerificacion);
           ?>
-              <img src="<?= $qrUrl ?>" alt="Código QR Pase Ágil" style="width:150px; height:150px; margin:0 auto; display:block;">
-              <p class="qr-label">Escanear al llegar a frontera</p>
+              <img src="<?= $qrUrl ?>" alt="Código QR Pase Ágil" style="width:180px; height:180px; margin:0 auto; display:block;">
+              <p class="qr-label" style="font-size: 11px; color: var(--gris-muted); margin: 10px; padding-top: 12px;">Escanear al llegar a frontera</p>
           <?php else: ?>
               <div style="padding:20px; color:#999;">No hay Pase Ágil activo</div>
           <?php endif; ?>
