@@ -127,7 +127,9 @@
       </a>
       <nav class="landing-nav">
         <button class="landing-nav-link">Inicio</button>
-        <button class="landing-nav-link">Sobre el sistema</button>
+        <button class="landing-nav-link" onclick="document.getElementById('sobre-sistema').scrollIntoView({ behavior: 'smooth' });">
+          <i class="bi bi-info-circle"></i> Sobre el sistema
+        </button>
         <button class="btn-landing-login" onclick="abrirModal('login')">Iniciar sesión</button>
         <button class="btn-landing-registro" onclick="abrirModal('registro')">Registrarse</button>
       </nav>
@@ -135,52 +137,55 @@
 
     <!-- Slides (igual que en el HTML original) -->
     <div class="slide activo" id="slide-0">
-      <img class="slide-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Paso_Los_Libertadores_desde_el_lado_chileno.jpg/1280px-Paso_Los_Libertadores_desde_el_lado_chileno.jpg" onerror="this.style.display='none'; this.parentElement.classList.add('slide-bg-1')" alt="Paso Los Libertadores">
+      <img class="slide-img" src="/img/Cordillera.png" alt="Paso Los Libertadores - Cordillera de los Andes">
       <div class="slide-overlay"></div>
       <div class="slide-contenido">
-        <span class="slide-tag">🇨🇱 Paso Los Libertadores · Chile – Argentina</span>
-        <h1>Cruza la frontera<br>sin <em>esperas</em></h1>
-        <p>Pre-registra tu información y documentos antes de llegar. Obtén tu Pase Ágil QR y reduce el tiempo de espera hasta en un 50%.</p>
-        <div class="slide-btns">
-          <button class="btn-cta-primario" onclick="abrirModal('registro')">Iniciar Pre-Registro</button>
-          <button class="btn-cta-secundario" onclick="abrirModal('login')">Consultar mi Trámite</button>
-        </div>
+          <span class="slide-tag">🇨🇱 Paso Los Libertadores · Chile – Argentina</span>
+          <h1>Cruza la frontera<br>sin <em>esperas</em></h1>
+          <p>Pre-registra tu información y documentos antes de llegar. Obtén tu Pase Ágil QR y reduce el tiempo de espera hasta en un 50%.</p>
+          <div class="slide-btns">
+              <button class="btn-cta-primario" onclick="abrirModal('registro')">Iniciar Pre-Registro</button>
+              <button class="btn-cta-secundario" onclick="abrirModal('login')">Consultar mi Trámite</button>
+          </div>
       </div>
     </div>
-    <div class="slide slide-bg-2" id="slide-1">
+    <div class="slide" id="slide-1">
+      <img class="slide-img" src="/img/Camion.png" alt="Transporte de carga en frontera">
       <div class="slide-overlay"></div>
       <div class="slide-contenido">
-        <span class="slide-tag">🚛 Para Transportistas y Carga</span>
-        <h1>Tu carga cruza<br>más <em>rápido</em></h1>
-        <p>Transportistas y empresas pueden pre-declarar su carga, documentación de vehículos y permisos SAG con anticipación, evitando demoras en ventanilla.</p>
-        <div class="slide-btns">
-          <button class="btn-cta-primario" onclick="abrirModal('registro')">Registrar Empresa</button>
-          <button class="btn-cta-secundario" onclick="abrirModal('login')">Ingresar al Portal</button>
-        </div>
+          <span class="slide-tag">🚛 Para Transportistas y Carga</span>
+          <h1>Tu carga cruza<br>más <em>rápido</em></h1>
+          <p>Transportistas y empresas pueden pre-declarar su carga, documentación de vehículos y permisos SAG con anticipación, evitando demoras en ventanilla.</p>
+          <div class="slide-btns">
+              <button class="btn-cta-primario" onclick="abrirModal('registro')">Registrar Empresa</button>
+              <button class="btn-cta-secundario" onclick="abrirModal('login')">Ingresar al Portal</button>
+          </div>
       </div>
     </div>
-    <div class="slide slide-bg-3" id="slide-2">
+    <div class="slide" id="slide-2">
+      <img class="slide-img" src="/img/Validacion.png" alt="Validación cruzada interinstitucional">
       <div class="slide-overlay"></div>
       <div class="slide-contenido">
-        <span class="slide-tag">🔗 Validación Cruzada Interinstitucional</span>
-        <h1>7 organismos,<br>una sola <em>validación</em></h1>
-        <p>Nuestro sistema valida tu información simultáneamente con PDI, SAG, Carabineros, Registro Civil, Interpol, SII y Aduana Argentina en menos de 2 segundos.</p>
-        <div class="slide-btns">
-          <button class="btn-cta-primario" onclick="abrirModal('registro')">Comenzar Ahora</button>
-          <button class="btn-cta-secundario">Conocer más</button>
-        </div>
+          <span class="slide-tag">🔗 Validación Cruzada Interinstitucional</span>
+          <h1>7 organismos,<br>una sola <em>validación</em></h1>
+          <p>Nuestro sistema valida tu información simultáneamente con PDI, SAG, Carabineros, Registro Civil, Interpol, SII y Aduana Argentina en menos de 2 segundos.</p>
+          <div class="slide-btns">
+              <button class="btn-cta-primario" onclick="abrirModal('registro')">Comenzar Ahora</button>
+              <button class="btn-cta-secundario">Conocer más</button>
+          </div>
       </div>
     </div>
-    <div class="slide slide-bg-1" id="slide-3">
+    <div class="slide" id="slide-3">
+      <img class="slide-img" src="/img/QR.png" alt="Pase Ágil QR - Aprobación en el bolsillo">
       <div class="slide-overlay"></div>
       <div class="slide-contenido">
-        <span class="slide-tag">✅ Pase Ágil QR</span>
-        <h1>Tu aprobación<br>en el <em>bolsillo</em></h1>
-        <p>Una vez validados tus documentos, recibes un código QR en tu teléfono. Preséntalo en frontera y pasa directo, sin filas ni papeleo.</p>
-        <div class="slide-btns">
-          <button class="btn-cta-primario" onclick="abrirModal('registro')">Obtener mi Pase QR</button>
-          <button class="btn-cta-secundario" onclick="abrirModal('login')">Ya tengo cuenta</button>
-        </div>
+          <span class="slide-tag">✅ Pase Ágil QR</span>
+          <h1>Tu aprobación<br>en el <em>bolsillo</em></h1>
+          <p>Una vez validados tus documentos, recibes un código QR en tu teléfono. Preséntalo en frontera y pasa directo, sin filas ni papeleo.</p>
+          <div class="slide-btns">
+              <button class="btn-cta-primario" onclick="abrirModal('registro')">Obtener mi Pase QR</button>
+              <button class="btn-cta-secundario" onclick="abrirModal('login')">Ya tengo cuenta</button>
+          </div>
       </div>
     </div>
 
@@ -203,6 +208,45 @@
     <div class="carrusel-progreso" id="barraProgreso"></div>
   </div>
 </div>
+
+<!-- ===== SECCIÓN: SOBRE EL SISTEMA ===== -->
+<section id="sobre-sistema" class="sobre-section">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">Sobre el Sistema</h2>
+            <p class="section-subtitle">Conoce cómo Latido Andino transforma el control fronterizo</p>
+        </div>
+
+        <div class="sobre-grid">
+            <div class="sobre-card">
+                <span class="icono">🎯</span>
+                <h5>Misión</h5>
+                <p>Fiscalizar y facilitar el comercio exterior, contribuyendo a la recaudación fiscal, el desarrollo económico y la protección del país.</p>
+            </div>
+            <div class="sobre-card">
+                <span class="icono">👁️</span>
+                <h5>Visión</h5>
+                <p>Ser reconocidos como un Servicio de gestión pública de excelencia, líderes en la protección y desarrollo del comercio internacional de Chile.</p>
+            </div>
+            <div class="sobre-card">
+                <span class="icono">⚡</span>
+                <h5>Objetivo</h5>
+                <p>Reducir tiempos de espera en frontera mediante pre-registro y validación cruzada automatizada con 7 instituciones.</p>
+            </div>
+        </div>
+
+        <div class="instituciones-card">
+            <h6>🏛️ Instituciones integradas</h6>
+            <span class="badge-inst pdi">PDI</span>
+            <span class="badge-inst sag">SAG</span>
+            <span class="badge-inst interpol">Interpol</span>
+            <span class="badge-inst registro">Reg. Civil</span>
+            <span class="badge-inst rnv">RNV</span>
+            <span class="badge-inst carabineros">Carabineros</span>
+            <span class="badge-inst sii">SII</span>
+        </div>
+    </div>
+</section>
 
 <script>
 // ===== LOGICA DE CARRUSEL =====
