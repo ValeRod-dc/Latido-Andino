@@ -20,53 +20,72 @@ Desarrollado con PHP MVC, MongoDB, Bootstrap y Docker.
 
 ---
 
-## 📁 Estructura del Proyecto (EN DESARROLLO)
+## 📁 Estructura del Proyecto
 
 ```
 latido-andino/
-├── docker-compose.yml      # Servicios web + MongoDB, puerto 8081:80
-├── Dockerfile              # PHP 8.2 + Apache + extensión MongoDB
-├── apache-config.conf      # Configuración virtual host
-├── init-db.js              # Datos iniciales (usuarios, pasos fronterizos)
-├── start.sh / start.bat    # 🚀 Iniciar aplicación
-├── stop.sh / stop.bat      # 🛑 Detener aplicación
-├── clean.sh / clean.bat    # 🧹 Limpieza completa Docker
-├── .env.example            # Variables de entorno ejemplo
-├── docs/                   # 📚 Documentación técnica detallada
+├── docker-compose.yml          # Servicios web + MongoDB, puerto 8081:80
+├── Dockerfile                  # PHP 8.2 + Apache + extensión MongoDB
+├── apache-config.conf          # Configuración virtual host
+├── init-db.js                  # Datos iniciales (usuarios, pasos fronterizos)
+├── start.sh / start.bat        # 🚀 Iniciar aplicación
+├── stop.sh / stop.bat          # 🛑 Detener aplicación
+├── clean.sh / clean.bat        # 🧹 Limpieza completa Docker
+├── .env.example                # Variables de entorno ejemplo
+├── docs/                       # 📚 Documentación técnica detallada
 └── src/
-├── public/                 # Punto de entrada web
-│ ├── index.php             # Router principal
-│ ├── .htaccess             # Reescritura de URLs
-│ ├── css/                  # Estilos separados
-│ │  ├── style.css          # Estilos Globales
-│ │  ├── home.css           # Estilos para Landing page
-│ │  ├── login.css          # Estilos para Página de login
-│ │  ├── pre-registro.css   # Estilos para Formulario multi-step
-│ │  └── viajero-dashboard.css
-├── core/                       # Núcleo del sistema
-│ └── Database.php              # Singleton para MongoDB
-├── controllers/                # Controladores MVC
-│ ├── HomeController.php        # Landing, términos, contacto
-│ ├── AuthController.php        # Login, logout, redirección por rol
-│ └── TramiteController.php     # Pre-registro, validación, QR
-├── models/                     # Modelos de datos
-│ ├── User.php                  # Usuarios y autenticación
-│ ├── Tramite.php               # Trámites de ingreso/salida
-│ └── Vehiculo.php              # Registro y acuerdo bilateral
-├── services/                   # Lógica de negocio externa
-│ ├── ValidacionService.php         # Orquestación validación cruzada
-│ └── IntegracionMockService.php    # Simulación de APIs (PDI, SAG, Interpol)
-└── views/                          # Vistas organizadas por sección
-├── public/                         # Acceso público
-│ ├── home.php                      # Landing page
-│ ├── pre-registro.php              # Formulario de pre-registro
-│ └── consulta-estado.php           # Ver Estado
-├── auth/                           # Autenticación
-│ └── login.php                     # Login
-├── tramite/                # Trámites
-│ └── pase-agil.php         # Visualización QR
-└── viajero/                # Dashboard del viajero
-└── dashboard.php
+    ├── public/                 # Punto de entrada web
+    │   ├── index.php           # Router principal
+    │   ├── .htaccess           # Reescritura de URLs
+    │   └── css/                # Estilos separados por página
+    │       ├── style.css       # Variables y estilos globales
+    │       ├── landing.css     # Estilos de la landing page
+    │       ├── login.css       # Estilos de login
+    │       ├── portal.css      # Estilos de los portales
+    │       ├── pre-registro.css# Formulario multi-step
+    │       ├── reportes.css    # Generación de reportes
+    │       ├── verificar.css   # Página de verificación QR
+    │       └── viajero-dashboard.css
+    ├── core/                   # Núcleo del sistema
+    │   └── Database.php        # Singleton para MongoDB
+    ├── controllers/            # Controladores MVC
+    │   ├── AuthController.php        # Login, logout, redirección por rol
+    │   ├── HomeController.php        # Landing, términos, contacto
+    │   ├── IncidenciaController.php  # Registro de incidencias
+    │   ├── PortalController.php      # Dashboard por rol
+    │   ├── ReporteController.php     # Generación de PDF/Excel
+    │   ├── TramiteController.php     # Pre-registro, validación, QR
+    │   └── VerificarController.php   # Página pública de verificación
+    ├── models/                 # Modelos de datos
+    │   ├── Tramite.php         # Trámites de ingreso/salida
+    │   ├── User.php            # Usuarios y autenticación
+    │   └── Vehiculo.php        # Registro de vehículos
+    ├── services/               # Lógica de negocio externa
+    │   ├── IntegracionMockService.php # Simulación de APIs (PDI, SAG, Interpol, RNV)
+    │   └── ValidacionService.php      # Orquestación de validación cruzada
+    └── views/                  # Vistas organizadas por sección
+        ├── landing.php         # Página principal (carrusel + modal)
+        ├── verificar.php       # Página pública de verificación QR
+        ├── auth/               # Autenticación
+        │   └── login.php       # (Redirige a landing)
+        ├── portal/             # Dashboards por rol
+        │   ├── base.php        # Plantilla común (navbar, footer)
+        │   ├── viajero.php     # Dashboard del viajero
+        │   ├── funcionario.php # Panel de funcionario (Aduanas, SAG, PDI)
+        │   └── admin.php       # Panel de administrador
+        ├── public/             # Páginas públicas informativas
+        │   ├── accesibilidad.php
+        │   ├── ayuda.php
+        │   ├── contacto.php
+        │   ├── privacidad.php
+        │   └── terminos.php
+        ├── reportes/           # Formulario de generación de reportes
+        │   └── index.php
+        └── tramite/            # Trámites
+            ├── buscar-estado.php   # Buscador de estado
+            ├── estado.php          # Listado de trámites por RUT
+            ├── pase-agil.php       # Visualización del QR aprobado
+            └── pre-registro.php    # Formulario multi-step
 ```
 
 ## 🛠️ Instalación y Uso
@@ -253,31 +272,6 @@ El proyecto está configurado para desarrollo rápido:
 3. Los cambios se reflejan automáticamente
 
 No es necesario reiniciar Docker para cambios en el código.
-
-## 📚 Documentación Completa (EN DESARROLLO)
-
-Toda la documentación está organizada en la carpeta `docs/`:
-
-| Documento | Descripción |
-|-----------|-------------|
-| [INDEX.md](docs/INDEX.md) | 📑 Índice general de toda la documentación |
-| [QUICKSTART.md](docs/QUICKSTART.md) | 🚀 Guía de inicio rápido (3 pasos) |
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | 🏗️ Arquitectura técnica detallada |
-| [COMMANDS.md](docs/COMMANDS.md) | ⌨️ Lista completa de comandos útiles |
-| [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | 🔧 Solución de problemas comunes |
-| [CHECKLIST.md](docs/CHECKLIST.md) | ✅ Lista de verificación del proyecto |
-| [STATUS.md](docs/STATUS.md) | 📊 Estado actual del proyecto |
-| [SUMMARY.md](docs/SUMMARY.md) | 📋 Resumen ejecutivo |
-| [PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md) | 🎯 Visión general del proyecto |
-|
-
-### 🎯 Por Dónde Empezar (EN DESARROLLO)
-
-- **Nuevo en el proyecto?** → Lee [docs/QUICKSTART.md](docs/QUICKSTART.md)
-- **Quieres entender la arquitectura?** → Lee [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- **Tienes un problema?** → Consulta [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
-- **Necesitas comandos?** → Revisa [docs/COMMANDS.md](docs/COMMANDS.md)
-
 
 ## 📄 Licencia
 Proyecto de demostración / educativo para el Servicio Nacional de Aduanas de Chile.
