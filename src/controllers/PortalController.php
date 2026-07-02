@@ -69,6 +69,21 @@ class PortalController {
             exit;
         }
         $tramitesPendientes = $this->tramiteModel->getPendientes(null, 50);
+        $db = Database::getInstance();
+
+        // Verificar si la bitácora tiene datos, si no, insertar algunos de ejemplo
+        $countBitacora = $db->count('bitacora');
+        if ($countBitacora == 0) {
+            $db->insert('bitacora', ['hora' => '09:42', 'accion' => 'LOGIN', 'usuario' => 'admin@latidoandino.cl', 'detalle' => 'Inicio de sesión exitoso', 'tipo' => 'info', 'created_at' => new MongoDB\BSON\UTCDateTime()]);
+            $db->insert('bitacora', ['hora' => '09:38', 'accion' => 'APROBAR', 'usuario' => 'aduanas@aduana.cl', 'detalle' => 'Trámite #A3F91 aprobado', 'tipo' => 'ok', 'created_at' => new MongoDB\BSON\UTCDateTime()]);
+            $db->insert('bitacora', ['hora' => '09:31', 'accion' => 'RECHAZAR', 'usuario' => 'sag@sag.cl', 'detalle' => 'Trámite #B2C44 rechazado — doc. falso', 'tipo' => 'warn', 'created_at' => new MongoDB\BSON\UTCDateTime()]);
+            $db->insert('bitacora', ['hora' => '09:15', 'accion' => 'CREAR', 'usuario' => 'admin@latidoandino.cl', 'detalle' => 'Usuario carmen.rios creado', 'tipo' => 'info', 'created_at' => new MongoDB\BSON\UTCDateTime()]);
+            $db->insert('bitacora', ['hora' => '08:55', 'accion' => 'ALERTA', 'usuario' => 'SISTEMA', 'detalle' => 'API Interpol sin respuesta 2 min.', 'tipo' => 'error', 'created_at' => new MongoDB\BSON\UTCDateTime()]);
+        }
+
+        // Obtener bitácora real desde la BD
+        $bitacora = $db->find('bitacora', [], ['sort' => ['created_at' => -1], 'limit' => 50]);
+
         require_once __DIR__ . '/../views/portal/base.php';
     }
 }
