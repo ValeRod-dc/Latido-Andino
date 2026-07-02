@@ -252,7 +252,19 @@ class TramiteController {
             return;
         }
 
+         // Si el estado ya es el mismo, no hacer nada
+        if ($tramite->estado === $nuevoEstado) {
+            echo json_encode(['success' => true, 'message' => 'Ya está en ese estado']);
+            return;
+        }
+
         $resultado = $this->tramiteModel->cambiarEstado($tramiteId, $nuevoEstado);
+        
+        if ($resultado && $nuevoEstado === 'aprobado') {
+            // Opcional: enviar notificación al viajero (RF-08)
+            // $this->enviarNotificacion($tramite);
+        }
+
         echo json_encode(['success' => $resultado]);
     }
 
@@ -268,11 +280,12 @@ class TramiteController {
         // Construir URL de verificación
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'];
+        // Forzar http en localhost
+        if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+            $protocol = 'http://';
+        } else {
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+        }
         $urlVerificacion = $protocol . $host . '/verificar?codigo=' . urlencode($tramite->pase_agil_qr);
-
-        // Generar QR con la URL completa
-        $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($urlVerificacion);
-
-        require_once __DIR__ . '/../views/tramite/pase-agil.php';
     }
 }

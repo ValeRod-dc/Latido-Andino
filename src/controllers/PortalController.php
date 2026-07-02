@@ -44,6 +44,7 @@ class PortalController {
             header('Location: /login');
             exit;
         }
+        $tramitesPendientes = $this->tramiteModel->getPendientes(null, 50);
         require_once __DIR__ . '/../views/portal/base.php';
     }
 }

@@ -68,13 +68,14 @@ class AuthController {
     
     private function getRedirectByRole($role) {
         $redirects = [
-            'viajero' => '/portal/viajero',
-            'aduanas' => '/portal/funcionario',
-            'sag'    => '/portal/funcionario',
-            'pdi'    => '/portal/funcionario',
-            'admin'  => '/portal/admin'
+            'viajero'       => '/portal/viajero',
+            'transportista' => '/portal/viajero',
+            'aduanas'       => '/portal/funcionario',
+            'sag'           => '/portal/funcionario',
+            'pdi'           => '/portal/funcionario',
+            'admin'         => '/portal/admin'
         ];
-        return $redirects[$role] ?? '/';
+        return $redirects[$role] ?? '/portal/viajero';
     }
     
     private function redirectByRole($role) {

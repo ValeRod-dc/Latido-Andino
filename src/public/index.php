@@ -177,6 +177,11 @@ switch ($uri) {
         $controller = new TramiteController();
         $controller->registrarFlujo();
         break;
+
+    case 'api/tramite/cambiar-estado':
+        $controller = new TramiteController();
+        $controller->cambiarEstado();
+        break;
     
     default:
         // Soporta /tramite/pase-agil/{id}, formato que usa el JS de pre-registro.php

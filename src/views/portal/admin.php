@@ -190,6 +190,60 @@ $tareas = [
       </div>
     </div>
 
+    <!-- ===== SECCIÓN: TRÁMITES PENDIENTES ===== -->
+    <div class="section-heading" style="margin-top:40px;">
+        <span>Trámites Pendientes de Aprobación</span>
+    </div>
+
+    <div class="tabla-tramites">
+        <div class="tabla-header">
+            <h3>Lista de trámites pendientes</h3>
+            <div class="filtros">
+                <input type="text" placeholder="Buscar por RUT o nombre..." id="buscarPendientes" oninput="filtrarTabla()">
+            </div>
+        </div>
+        <table id="tablaPendientes">
+            <thead>
+                <tr>
+                    <th>N° Trámite</th>
+                    <th>Viajero</th>
+                    <th>RUT</th>
+                    <th>Paso fronterizo</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($tramitesPendientes)): ?>
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:30px; color:var(--gris-muted);">
+                            No hay trámites pendientes en este momento
+                        </td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($tramitesPendientes as $t): ?>
+                        <tr data-rut="<?= htmlspecialchars($t->viajero_rut ?? '') ?>" 
+                            data-nombre="<?= htmlspecialchars($t->viajero_nombre ?? '') ?>">
+                            <td><strong>#<?= substr((string)$t->_id, -6) ?></strong></td>
+                            <td><?= htmlspecialchars($t->viajero_nombre ?? 'Sin nombre') ?></td>
+                            <td><?= htmlspecialchars($t->viajero_rut ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($t->paso_fronterizo ?? 'N/A') ?></td>
+                            <td><?= isset($t->created_at) ? date('d/m/Y H:i', $t->created_at->toDateTime()->getTimestamp()) : 'N/A' ?></td>
+                            <td>
+                                <button class="btn-accion" onclick="cambiarEstado('<?= (string)$t->_id ?>', 'aprobado')">
+                                    ✅ Aprobar
+                                </button>
+                                <button class="btn-accion danger" onclick="cambiarEstado('<?= (string)$t->_id ?>', 'rechazado')">
+                                    ❌ Rechazar
+                                </button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
     <!-- Reportes -->
     <div class="admin-seccion" id="panel-reportes">
       <div class="tabla-tramites">
@@ -280,5 +334,56 @@ function abrirModulo(id) {
     wrapper.style.display = 'block';
     wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+}
+</script>
+
+<script>
+// ===== CAMBIAR ESTADO DE TRÁMITE (APROBAR/RECHAZAR) =====
+async function cambiarEstado(tramiteId, estado) {
+    const mensaje = estado === 'aprobado' 
+        ? '¿Confirmar APROBACIÓN del trámite #' + tramiteId.substring(0,6) + '? Se generará el Pase Ágil QR.'
+        : '¿Confirmar RECHAZO del trámite #' + tramiteId.substring(0,6) + '?';
+    
+    if (!confirm(mensaje)) return;
+
+    const formData = new FormData();
+    formData.append('tramite_id', tramiteId);
+    formData.append('estado', estado);
+
+    try {
+        const response = await fetch('/api/tramite/cambiar-estado', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('✅ Trámite ' + estado.toUpperCase() + ' correctamente');
+            location.reload(); // Recargar para actualizar la tabla
+        } else {
+            alert('❌ Error: ' + (data.message || 'No se pudo cambiar el estado'));
+        }
+    } catch (error) {
+        alert('❌ Error de conexión al servidor');
+    }
+}
+
+// ===== FILTRAR TABLA POR RUT O NOMBRE =====
+function filtrarTabla() {
+    const input = document.getElementById('buscarPendientes');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('tablaPendientes');
+    const rows = table.getElementsByTagName('tr');
+
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const rut = row.getAttribute('data-rut')?.toLowerCase() || '';
+        const nombre = row.getAttribute('data-nombre')?.toLowerCase() || '';
+        if (rut.includes(filter) || nombre.includes(filter)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
 }
 </script>

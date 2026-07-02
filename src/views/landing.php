@@ -59,7 +59,7 @@
           <button style="border:1px solid var(--gris-borde); background:#fff; border-radius:var(--radio); padding:10px; font-size:13px; font-weight:600; cursor:pointer;">🪪 ClaveÚnica</button>
           <button style="border:1px solid var(--gris-borde); background:#fff; border-radius:var(--radio); padding:10px; font-size:13px; font-weight:600; cursor:pointer;">📱 Pasaporte Digital</button>
         </div>
-        <a class="modal-link" onclick="switchModalTab('registro', document.querySelectorAll('.modal-tab')[1])">¿No tienes cuenta? Regístrate aquí →</a>
+        <a class="modal-link" onclick="switchModalTab('registro')">¿No tienes cuenta? Regístrate aquí →</a>
       </div>
 
       <!-- PANEL REGISTRO -->
@@ -100,11 +100,11 @@
         </div>
         <div style="height:14px;"></div>
         <label class="checkbox-label">
-          <input type="checkbox" name="terminos" required>
+          <input type="checkbox" id="reg-terminos" name="terminos" required>
           <span>Acepto los <a href="#">Términos de Uso</a> y autorizo el tratamiento de mis datos conforme a la <a href="#">Ley 19.628</a>.</span>
         </label>
         <button class="btn-modal-submit rojo" onclick="procesarRegistro()">Crear Cuenta</button>
-        <a class="modal-link" onclick="switchModalTab('login', document.querySelectorAll('.modal-tab')[0])">← Ya tengo cuenta, iniciar sesión</a>
+        <a class="modal-link" onclick="switchModalTab('login')">← Ya tengo cuenta, iniciar sesión</a>
       </div>
     </div>
   </div>
@@ -270,18 +270,22 @@ async function procesarLogin() {
 }
 
 async function procesarRegistro() {
-  const nombre = document.getElementById('reg-nombres').value;
-  const apellido = document.getElementById('reg-apellidos').value;
-  const rut = document.getElementById('reg-rut').value;
-  const nacionalidad = document.getElementById('reg-nacionalidad').value;
-  const email = document.getElementById('reg-email').value;
-  const password = document.getElementById('reg-password').value;
-  const confirm = document.getElementById('reg-confirm').value;
-  const terminos = document.getElementById('reg-terminos').checked;
-  const rol = document.getElementById('reg-tipo').value;
-  
+  const nombre      = document.getElementById('reg-nombres').value.trim();
+  const apellido    = document.getElementById('reg-apellidos').value.trim();
+  const rut         = document.getElementById('reg-rut').value.trim();
+  const nacionalidad= document.getElementById('reg-nacionalidad').value;
+  const email       = document.getElementById('reg-email').value.trim();
+  const password    = document.getElementById('reg-password').value;
+  const confirm     = document.getElementById('reg-confirm').value;
+  const terminosEl  = document.getElementById('reg-terminos');
+  const rol         = document.getElementById('reg-tipo').value;
+
+  if (!nombre || !apellido || !email || !password) {
+    alert('Por favor completa todos los campos obligatorios'); return;
+  }
   if (password !== confirm) { alert('Las contraseñas no coinciden'); return; }
-  if (!terminos) { alert('Debes aceptar los términos'); return; }
+  if (password.length < 6) { alert('La contraseña debe tener al menos 6 caracteres'); return; }
+  if (!terminosEl || !terminosEl.checked) { alert('Debes aceptar los términos'); return; }
 
   const formData = new FormData();
   formData.append('name', nombre + ' ' + apellido);
@@ -291,12 +295,25 @@ async function procesarRegistro() {
   formData.append('nacionalidad', nacionalidad);
   formData.append('role', rol);
 
-  const response = await fetch('/auth/register', { method: 'POST', body: formData });
-  const data = await response.json();
-  if (data.success) {
-    window.location.href = data.redirect;
-  } else {
-    alert(data.message);
+  const btn = document.querySelector('#panel-registro .btn-modal-submit.rojo');
+  const textoOriginal = btn.textContent;
+  btn.textContent = '⏳ Creando cuenta...';
+  btn.disabled = true;
+
+  try {
+    const response = await fetch('/auth/register', { method: 'POST', body: formData });
+    const data = await response.json();
+    if (data.success) {
+      window.location.href = data.redirect;
+    } else {
+      alert('❌ ' + data.message);
+      btn.textContent = textoOriginal;
+      btn.disabled = false;
+    }
+  } catch (e) {
+    alert('❌ Error de conexión al servidor');
+    btn.textContent = textoOriginal;
+    btn.disabled = false;
   }
 }
 

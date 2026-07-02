@@ -24,9 +24,13 @@ $qrData = $qrData ?? null;
       <h3>Pase Ágil QR</h3>
       <div class="qr-mockup">
           <?php if ($qrData): 
-              $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
               $host = $_SERVER['HTTP_HOST'];
-              $urlVerificacion = $protocol . $host . '/verificar?codigo=' . urlencode($qrData);
+                if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+                    $protocol = 'http://';
+                } else {
+                    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+                }
+                $urlVerificacion = $protocol . $host . '/verificar?codigo=' . urlencode($qrData);
               $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($urlVerificacion);
           ?>
               <img src="<?= $qrUrl ?>" alt="Código QR Pase Ágil" style="width:150px; height:150px; margin:0 auto; display:block;">
