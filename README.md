@@ -3,7 +3,7 @@
 Sistema web para modernizar y agilizar el control fronterizo terrestre entre Chile y Argentina.  
 Permite el pre-registro de viajeros, validación cruzada automatizada (simulada) y generación de Pase Ágil QR.
 
-Desarrollado con PHP MVC, MongoDB, Bootstrap y Docker.
+Desarrollado con PHP MVC, MongoDB, Bootstrap Icons y Docker.
 
 ---
 
