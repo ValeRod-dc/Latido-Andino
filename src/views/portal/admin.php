@@ -136,7 +136,7 @@ function badgeTipoBitacora(string $tipo): string {
     <!-- ========================================================== -->
     <div id="admin-panel" style="display:none; margin-top:24px;">
 
-        <!-- ===== PANEL: USUARIOS ===== -->
+        <!-- ===== PANEL: USUARIOS CON ACCIONES ===== -->
         <div class="admin-seccion" id="panel-usuarios" style="display:none;">
             <div class="tabla-tramites">
                 <div class="tabla-header">
@@ -160,20 +160,78 @@ function badgeTipoBitacora(string $tipo): string {
                     </thead>
                     <tbody>
                         <?php foreach ($usuarios as $u): ?>
-                            <tr data-rol="<?= $u->role ?? '' ?>" data-nombre="<?= strtolower($u->name ?? '') ?>">
+                            <tr data-id="<?= (string)$u->_id ?>" data-rol="<?= $u->role ?? '' ?>" data-nombre="<?= strtolower($u->name ?? '') ?>">
                                 <td><strong><?= htmlspecialchars($u->name ?? 'N/A') ?></strong></td>
                                 <td><span class="badge badge-azul"><?= strtoupper($u->role ?? 'viajero') ?></span></td>
                                 <td><?= htmlspecialchars($u->email ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($u->rut ?? 'N/A') ?></td>
-                                <td><span class="badge <?= badgeEstado($u->activo ?? true ? 'Activo' : 'Inactivo') ?>"><?= ($u->activo ?? true) ? 'Activo' : 'Inactivo' ?></span></td>
+                                <td><span class="badge <?= ($u->activo ?? true) ? 'badge-verde' : 'badge-rojo' ?> estado-badge"><?= ($u->activo ?? true) ? 'Activo' : 'Inactivo' ?></span></td>
                                 <td>
-                                    <button class="btn-accion">Editar</button>
-                                    <button class="btn-accion outline"><?= ($u->activo ?? true) ? 'Desactivar' : 'Activar' ?></button>
+                                    <button class="btn-accion" onclick="editarUsuario('<?= (string)$u->_id ?>')">Editar</button>
+                                    <button class="btn-accion outline toggle-estado" data-id="<?= (string)$u->_id ?>" data-activo="<?= $u->activo ?? true ? '1' : '0' ?>" onclick="toggleEstado(this)">
+                                        <?= ($u->activo ?? true) ? 'Desactivar' : 'Activar' ?>
+                                    </button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- ===== MODAL EDITAR USUARIO ===== -->
+        <div id="modalEditarUsuario" class="modal-incidencia-overlay" style="display:none;">
+            <div class="modal-incidencia-box" style="max-width:500px;">
+                <div class="modal-incidencia-header">
+                    <h3><i class="bi bi-pencil-square" style="color:var(--azul);"></i> Editar Usuario</h3>
+                </div>
+                <div class="modal-incidencia-body">
+                    <form id="formEditarUsuario">
+                        <input type="hidden" name="usuario_id" id="edit_usuario_id">
+                        <div class="form-group">
+                            <label>Nombre completo <span style="color:red;">*</span></label>
+                            <input type="text" name="name" id="edit_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email <span style="color:red;">*</span></label>
+                            <input type="email" name="email" id="edit_email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>RUT</label>
+                            <input type="text" name="rut" id="edit_rut">
+                        </div>
+                        <div class="form-group">
+                            <label>Rol</label>
+                            <select name="role" id="edit_role">
+                                <option value="viajero">Viajero</option>
+                                <option value="aduanas">Aduanas</option>
+                                <option value="sag">SAG</option>
+                                <option value="pdi">PDI</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nacionalidad</label>
+                            <select name="nacionalidad" id="edit_nacionalidad">
+                                <option value="Chilena">Chilena</option>
+                                <option value="Argentina">Argentina</option>
+                                <option value="Peruana">Peruana</option>
+                                <option value="Boliviana">Boliviana</option>
+                                <option value="Otra">Otra</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:12px;">
+                            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                <input type="checkbox" name="activo" id="edit_activo" value="1" checked>
+                                Usuario activo
+                            </label>
+                        </div>
+                        <div class="modal-incidencia-actions">
+                            <button type="submit" class="btn-incidencia-submit" style="background:var(--azul);"><i class="bi bi-save"></i> Guardar cambios</button>
+                            <button type="button" class="btn-incidencia-cancel" onclick="cerrarModalEditar()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -394,6 +452,109 @@ function filtrarUsuarios() {
         row.style.display = (matchRol && matchNombre) ? '' : 'none';
     });
 }
+
+// ===== EDITAR USUARIO =====
+function editarUsuario(usuarioId) {
+    fetch('/admin/usuario/obtener?id=' + usuarioId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const u = data.usuario;
+                document.getElementById('edit_usuario_id').value = u.id;
+                document.getElementById('edit_name').value = u.name;
+                document.getElementById('edit_email').value = u.email;
+                document.getElementById('edit_rut').value = u.rut || '';
+                document.getElementById('edit_role').value = u.role || 'viajero';
+                document.getElementById('edit_nacionalidad').value = u.nacionalidad || 'Chilena';
+                document.getElementById('edit_activo').checked = u.activo !== false;
+                document.getElementById('modalEditarUsuario').style.display = 'flex';
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => alert('Error al cargar usuario'));
+}
+
+function cerrarModalEditar() {
+    document.getElementById('modalEditarUsuario').style.display = 'none';
+}
+
+// Envío del formulario de edición
+document.getElementById('formEditarUsuario').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = '⏳ Guardando...';
+    submitBtn.disabled = true;
+
+    try {
+        const response = await fetch('/admin/usuario/actualizar', { method: 'POST', body: formData });
+        const data = await response.json();
+        if (data.success) {
+            alert('✅ Usuario actualizado correctamente');
+            cerrarModalEditar();
+            location.reload();
+        } else {
+            alert('❌ Error: ' + data.message);
+        }
+    } catch (error) {
+        alert('❌ Error de conexión');
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
+
+// ===== ACTIVAR / DESACTIVAR USUARIO =====
+async function toggleEstado(btn) {
+    const usuarioId = btn.getAttribute('data-id');
+    const activoActual = btn.getAttribute('data-activo') === '1';
+    const nuevoEstado = !activoActual;
+    const mensaje = activoActual ? '¿Desactivar este usuario?' : '¿Activar este usuario?';
+
+    if (!confirm(mensaje)) return;
+
+    const formData = new FormData();
+    formData.append('usuario_id', usuarioId);
+    formData.append('activo', nuevoEstado ? '1' : '0');
+
+    try {
+        const response = await fetch('/admin/usuario/cambiar-estado', { method: 'POST', body: formData });
+        const data = await response.json();
+        if (data.success) {
+            alert('✅ Estado actualizado');
+            location.reload();
+        } else {
+            alert('❌ Error: ' + data.message);
+        }
+    } catch (error) {
+        alert('❌ Error de conexión');
+    }
+}
+
+// ===== FILTRAR USUARIOS =====
+function filtrarUsuarios() {
+    const rolFilter = document.getElementById('filtroRol').value.toLowerCase();
+    const nombreFilter = document.getElementById('buscarUsuario').value.toLowerCase();
+    const rows = document.querySelectorAll('#tablaUsuarios tbody tr');
+
+    rows.forEach(row => {
+        const rol = row.getAttribute('data-rol')?.toLowerCase() || '';
+        const nombre = row.getAttribute('data-nombre')?.toLowerCase() || '';
+        const matchRol = !rolFilter || rol === rolFilter;
+        const matchNombre = !nombreFilter || nombre.includes(nombreFilter);
+        row.style.display = (matchRol && matchNombre) ? '' : 'none';
+    });
+}
+
+// Cerrar modal con Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        cerrarModalEditar();
+        cerrarModalIncidencia();
+    }
+});
 
 // ===== FILTRAR BITÁCORA POR ACCIÓN Y BÚSQUEDA =====
 function filtrarBitacora() {

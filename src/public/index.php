@@ -198,6 +198,19 @@ switch ($uri) {
         $controller = new TramiteController();
         $controller->cambiarEstado();
         break;
+    // Admin - Gestión de usuarios
+    case 'admin/usuario/cambiar-estado':
+        $controller = new AdminController();
+        $controller->cambiarEstadoUsuario();
+        break;
+    case 'admin/usuario/obtener':
+        $controller = new AdminController();
+        $controller->obtenerUsuario();
+        break;
+    case 'admin/usuario/actualizar':
+        $controller = new AdminController();
+        $controller->actualizarUsuario();
+        break;
     
     default:
         // Soporta /tramite/pase-agil/{id}, formato que usa el JS de pre-registro.php
