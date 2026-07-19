@@ -27,6 +27,36 @@ db.usuarios.insertMany([
         created_at: new Date()
     },
     {
+        name: "Camila Rojas Fuentes",
+        email: "camila.rojas@example.com",
+        password: hash,
+        role: "viajero",
+        rut: "15.678.234-5",
+        nacionalidad: "Chilena",
+        activo: true,
+        created_at: new Date()
+    },
+    {
+        name: "Martín Gutiérrez Sosa",
+        email: "martin.gutierrez@example.com",
+        password: hash,
+        role: "viajero",
+        rut: "20.456.789-1",
+        nacionalidad: "Argentina",
+        activo: true,
+        created_at: new Date()
+    },
+    {
+        name: "Valentina Pérez Muñoz",
+        email: "valentina.perez@example.com",
+        password: hash,
+        role: "viajero",
+        rut: "18.234.567-8",
+        nacionalidad: "Chilena",
+        activo: true,
+        created_at: new Date()
+    },
+    {
         name: "Funcionario Aduanas",
         email: "aduanas@aduana.cl",
         password: hash,
@@ -110,6 +140,53 @@ db.tramites.insertMany([
             interpol: "sin_alertas"
         },
         created_at: new Date()
+    },
+    {
+        tipo: "ingreso",
+        viajero_rut: "15.678.234-5",
+        viajero_nombre: "Camila Rojas Fuentes",
+        paso_fronterizo: "Los Libertadores",
+        fecha_tramite: new Date(),
+        estado: "pendiente",
+        documentos: {
+            identidad: "pendiente",
+            declaracion_sag: "pendiente"
+        },
+        validacion_cruzada: [],
+        observaciones: null,
+        created_at: new Date(Date.now() - 10*60000)
+    },
+    {
+        tipo: "ingreso",
+        viajero_rut: "20.456.789-1",
+        viajero_nombre: "Martín Gutiérrez Sosa",
+        paso_fronterizo: "Paso Cardenal Samoré",
+        fecha_tramite: new Date(),
+        estado: "pendiente",
+        documentos: {
+            identidad: "pendiente",
+            declaracion_sag: "pendiente"
+        },
+        validacion_cruzada: [],
+        observaciones: null,
+        created_at: new Date(Date.now() - 18*60000)
+    },
+    {
+        tipo: "salida",
+        viajero_rut: "18.234.567-8",
+        viajero_nombre: "Valentina Pérez Muñoz",
+        paso_fronterizo: "Los Libertadores",
+        destino: "Argentina",
+        fecha_retorno: null,
+        fecha_tramite: new Date(),
+        estado: "pendiente",
+        documentos: {
+            identidad: "pendiente",
+            declaracion_sag: "pendiente"
+        },
+        validacion_cruzada: [],
+        observaciones: null,
+        created_at: new Date(Date.now() - 25*60000)
     }
 ]);
 
