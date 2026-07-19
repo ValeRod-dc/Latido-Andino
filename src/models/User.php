@@ -76,4 +76,8 @@ class User {
     public function update($id, $data) {
         return $this->db->update('usuarios', ['_id' => new MongoDB\BSON\ObjectId($id)], $data);
     }
+
+    public function cambiarEstado($id, $activo) {
+        return $this->update($id, ['activo' => (bool)$activo]);
+    }
 }
