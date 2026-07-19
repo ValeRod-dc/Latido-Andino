@@ -23,6 +23,9 @@ RUN pecl install mongodb \
 # Habilitar mod_rewrite
 RUN a2enmod rewrite
 
+# Instalar Composer (binario), necesario para las dependencias PHP (PhpSpreadsheet, Dompdf)
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 # Copiar configuración de Apache
 COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
 
