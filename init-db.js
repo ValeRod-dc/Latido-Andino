@@ -8,6 +8,7 @@ db.vehiculos.drop();
 db.declaraciones_sag.drop();
 db.pasos_fronterizos.drop();
 db.integraciones.drop();
+db.incidencias.drop();
 
 // Hash para "123456" (bcrypt)
 const hash = "$2y$10$k3mAM9vNjsDIKdLq3SYIgeKi3B5fw15Lpx4uBnxrftZ3PexqFL.8K";
@@ -132,8 +133,65 @@ db.vehiculos.insertMany([
     }
 ]);
 
+// ============================================
+// INCIDENCIAS DE EJEMPLO
+// ============================================
+db.incidencias.insertMany([
+    {
+        codigo: "#INC-001",
+        tramite_id: null,
+        viajero_rut: "12345678-9",
+        tipo: "documentacion_invalida",
+        descripcion: "Documento vencido — pasaporte exp. 2023",
+        funcionario_id: new ObjectId(),
+        estado: "abierta",
+        created_at: new Date(Date.now() - 5*60000)
+    },
+    {
+        codigo: "#INC-002",
+        tramite_id: null,
+        viajero_rut: "12345678-9",
+        tipo: "inconsistencia",
+        descripcion: "Discrepancia de datos con Registro Civil",
+        funcionario_id: new ObjectId(),
+        estado: "resuelta",
+        created_at: new Date(Date.now() - 8*60000)
+    },
+    {
+        codigo: "#INC-003",
+        tramite_id: null,
+        viajero_rut: "12345678-9",
+        tipo: "alerta_sanitaria",
+        descripcion: "Alerta Interpol activa",
+        funcionario_id: new ObjectId(),
+        estado: "escalada",
+        created_at: new Date(Date.now() - 12*60000)
+    },
+    {
+        codigo: "#INC-004",
+        tramite_id: null,
+        viajero_rut: "12345678-9",
+        tipo: "inconsistencia",
+        descripcion: "Datos inconsistentes RUT y nombre",
+        funcionario_id: new ObjectId(),
+        estado: "abierta",
+        created_at: new Date(Date.now() - 20*60000)
+    },
+    {
+        codigo: "#INC-005",
+        tramite_id: null,
+        viajero_rut: "12345678-9",
+        tipo: "otro",
+        descripcion: "Verificando búsqueda de trámite con RUT",
+        funcionario_id: new ObjectId(),
+        estado: "abierta",
+        created_at: new Date(Date.now() - 25*60000)
+    }
+]);
+
 print("✅ Base de datos Latido Andino inicializada");
 print(`📊 Usuarios: ${db.usuarios.countDocuments()}`);
 print(`🚏 Pasos fronterizos: ${db.pasos_fronterizos.countDocuments()}`);
 print(`🚗 Vehículos: ${db.vehiculos.countDocuments()}`);
 print(`📄 Trámites: ${db.tramites.countDocuments()}`);
+print(`🚨 Incidencias: ${db.incidencias.countDocuments()}`);
