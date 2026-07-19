@@ -39,6 +39,9 @@ goto loop
 echo Inicializando base de datos con datos de ejemplo...
 docker exec -i %CONTAINER_NAME% mongosh < init-db.js
 
+echo Instalando dependencias de Composer (PhpSpreadsheet, Dompdf)...
+docker exec -i latido_andino_web composer install --working-dir=/var/www/html --no-interaction
+
 echo.
 echo ✅ ¡Sistema listo!
 echo.

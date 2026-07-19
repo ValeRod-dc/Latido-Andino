@@ -3,6 +3,9 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
+# En Linux/macOS esta variable no tiene efecto.
+export MSYS_NO_PATHCONV=1
+
 echo "🛃 Latido Andino - Inicializador"
 echo "================================"
 echo ""
@@ -40,6 +43,9 @@ fi
 
 echo "📊 Inicializando base de datos con datos de ejemplo..."
 docker exec -i "$CONTAINER_NAME" mongosh < init-db.js
+
+echo "📦 Instalando dependencias de Composer (PhpSpreadsheet, Dompdf)..."
+docker exec -i latido_andino_web composer install --working-dir=/var/www/html --no-interaction
 
 echo ""
 echo "✅ ¡Sistema listo!"
